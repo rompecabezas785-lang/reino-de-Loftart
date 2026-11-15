@@ -71,8 +71,13 @@
       const x=t.x+Math.cos(a)*2.65,z=t.z+Math.sin(a)*2.65;
       box(1.75,.18,.42,x,y-.09,z,trim,-a);
       stairs.push({x,z,y,tower:index,angle:a});
-      box(.07,.95,.07,t.x+Math.cos(a)*1.72,y+.475,t.z+Math.sin(a)*1.72,iron);
+      for(const radius of [1.72,3.58]){
+        box(.07,.95,.07,t.x+Math.cos(a)*radius,y+.475,t.z+Math.sin(a)*radius,iron);
+        box(.08,.08,.42,t.x+Math.cos(a)*radius,y+.95,t.z+Math.sin(a)*radius,iron,-a);
+      }
     }
+    const landingAngle=entry+.35+63*Math.PI*2/64;
+    box(1.7,.24,.9,t.x+Math.cos(landingAngle)*3.45,height-.12,t.z+Math.sin(landingAngle)*3.45,trim,-landingAngle);
     // Central column, radial ribs, and two landings join the wall approaches.
     const pillar=sf(.45,.55,height,'#777466',24);pillar.position.set(t.x,height/2,t.z);architecture.add(pillar);
     g.terreno.colliders.push(pf(t.x,t.z,.55,height));
@@ -107,12 +112,57 @@
   }
   const ground=g.terreno.alturaSuelo.bind(g.terreno);
   const onDeck=(x,z)=>towers.some(t=>{const d=Math.hypot(t.x-x,t.z-z);return d>=3.35&&d<=4.65;})||sides.some(s=>segment(x,z,s).d<=1.65&&towers.every(t=>Math.hypot(x-t.x,z-t.z)>3.8));
+  const turn=Math.PI*2, stairArc=63*turn/64;
+  const phaseAt=(t,x,z)=>((Math.atan2(z-t.z,x-t.x)-t.entry-.35)%turn+turn)%turn;
+  const rampAt=(t,x,z)=>{
+    const radius=Math.hypot(x-t.x,z-t.z),phase=phaseAt(t,x,z);
+    if(radius<1.75||radius>3.6||phase>stairArc+.025)return null;
+    return Math.min(height,height/64+phase/stairArc*(height-height/64));
+  };
+  const landingAt=(t,x,z)=>{
+    const angle=t.entry+.35+stairArc,dx=x-t.x,dz=z-t.z;
+    const radial=dx*Math.cos(angle)+dz*Math.sin(angle),side=-dx*Math.sin(angle)+dz*Math.cos(angle);
+    return radial>=2.55&&radial<=4.3&&Math.abs(side)<=.45;
+  };
   g.terreno.alturaSuelo=(x,z,y)=>{
     let floor=ground(x,z,y);
-    for(const step of stairs){const dx=x-step.x,dz=z-step.z;
-      if(Math.abs(dx*Math.cos(step.angle)+dz*Math.sin(step.angle))<=.9&&Math.abs(-dx*Math.sin(step.angle)+dz*Math.cos(step.angle))<=.23&&step.y<=y+.22)floor=Math.max(floor,step.y);}
-    if(y>=height-.22&&onDeck(x,z))floor=Math.max(height,floor);
+    for(const t of towers){const ramp=rampAt(t,x,z);
+      if(ramp!==null&&ramp<=y+.6)floor=Math.max(floor,ramp);
+      if(y>=height-.6&&landingAt(t,x,z))floor=Math.max(floor,height);
+    }
+    if(y>=height-.6&&onDeck(x,z))floor=Math.max(height,floor);
     return floor;
+  };
+  const updateKing=g.rey.update.bind(g.rey);
+  g.rey.update=(dt,input,camera,terrain)=>{
+    const king=g.rey,near=towers.find(t=>Math.hypot(king.pos.x-t.x,king.pos.z-t.z)<7);
+    if(!near&&!(king.pos.y>=height-.3&&onDeck(king.pos.x,king.pos.z))){updateKing(dt,input,camera,terrain);return;}
+    // Bound movement distance per physics step, including sprint and dodge.
+    const steps=Math.max(1,Math.ceil(dt/(1/120)));
+    const heldInput=Object.create(input);heldInput.presionada=()=>false;
+    for(let i=0;i<steps;i++){
+      const previous=king.pos.clone(),wasGrounded=king.enSuelo;
+      const ramp=near?rampAt(near,previous.x,previous.z):null;
+      updateKing(dt/steps,i===0?input:heldInput,camera,terrain);
+      if(king.muerto)continue;
+      if(near&&ramp!==null&&Math.abs(previous.y-ramp)<.65&&previous.y>.3&&previous.y<height-.25){
+        const radius=Math.hypot(king.pos.x-near.x,king.pos.z-near.z);
+        let phase=phaseAt(near,previous.x,previous.z);
+        const oldAngle=Math.atan2(previous.z-near.z,previous.x-near.x),newAngle=Math.atan2(king.pos.z-near.z,king.pos.x-near.x);
+        phase=Math.max(0,Math.min(stairArc,phase+Math.atan2(Math.sin(newAngle-oldAngle),Math.cos(newAngle-oldAngle))));
+        const angle=near.entry+.35+phase,clamped=Math.max(2.1,Math.min(3.15,radius));
+        king.pos.x=near.x+Math.cos(angle)*clamped;king.pos.z=near.z+Math.sin(angle)*clamped;
+      }
+      if(previous.y>=height-.25&&(onDeck(previous.x,previous.z)||(near&&landingAt(near,previous.x,previous.z)))){
+        const nextRamp=near?rampAt(near,king.pos.x,king.pos.z):null;
+        if(!onDeck(king.pos.x,king.pos.z)&&!(near&&landingAt(near,king.pos.x,king.pos.z))&&!(nextRamp!==null&&nextRamp>height-.7)){
+          king.pos.x=previous.x;king.pos.z=previous.z;
+        }
+      }
+      const floor=terrain.alturaSuelo(king.pos.x,king.pos.z,previous.y);
+      if((wasGrounded&&king.velY<=0)||king.esquiva){king.pos.y=floor;king.velY=0;king.enSuelo=true;}
+      king.modelo.position.copy(king.pos);
+    }
   };
   const teleport=(x,y,z)=>{g.rey.pos.set(x,y,z);g.rey.modelo.position.copy(g.rey.pos);g.rey.velY=0;g.rey.velHorizontal.set(0,0,0);g.rey.enSuelo=true;g.camRig.iniciado=false;};
   g._entrarTorre=door=>{const t=door.ref.centro,a=Math.atan2(-t.z,-t.x);teleport(t.x+Math.cos(a)*3.1,0,t.z+Math.sin(a)*3.1);};

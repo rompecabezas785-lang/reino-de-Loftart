@@ -51,3 +51,9 @@ Se retiraron 52 módulos visuales antiguos de muralla antes de colocar los nuevo
 `src/visual.js` genera arquitectura original y una textura de mampostería de 1024 × 1024 con juntas, variación mineral y musgo. Las piezas repetidas se agrupan por material para reducir llamadas de dibujo. El tema del HUD está en `src/visual.css`.
 
 La herramienta `game-dev` no estaba disponible; los modelos nuevos se crean directamente con el motor del juego. No se generaron paquetes GLB externos ni se usaron proveedores de pago.
+
+## Corrección de escaleras y colisiones
+
+Se reprodujo la caída al correr a 20 FPS: el desplazamiento saltaba más de un peldaño por actualización y el detector rechazaba el siguiente apoyo. Las barandillas anteriores tampoco tenían protección física lateral. La versión corregida usa una superficie de apoyo continua bajo los peldaños, pasos de física de hasta 1/120 s cerca de las torres, límites laterales y un desembarco que conecta la escalera con el anillo superior. Los saltos siguen usando su velocidad vertical; las pulsaciones únicas no se repiten al subdividir la física.
+
+`tests/towers.cjs` recorre las ocho torres desde el patio, sube corriendo, sale hacia la muralla, vuelve y baja. Incluye empujes contra los dos laterales y una esquiva. La regresión inicial falló en las 26 comprobaciones originales de esta suite. Las pruebas anteriores de centros de peldaño no cubrían estos recorridos a baja frecuencia.
