@@ -33,33 +33,64 @@
   }
   const doors=g.fort.puertas.filter(p=>p.nombre.startsWith('Puerta de la torre'));
   for(const door of doors) door.root.visible=false;
-  towers.forEach(t=>{
-    box(7,height-.3,7,t.x,(height-.3)/2,t.z);
-    box(7.6,.45,7.6,t.x,height-.225,t.z,trim);
-    for(const dx of [-1,1]) for(const dz of [-1,1]) box(.65,height+.2,.65,t.x+dx*3.2,height/2,t.z+dz*3.2,trim);
-    // Crenellations leave wide openings in the middle for adjoining walkways.
-    for(const sign of [-1,1]) for(const off of [-3,-2,2,3]) {
-      box(.7,1.1,.65,t.x+off,height+.55,t.z+sign*3.5,trim);
-      box(.65,1.1,.7,t.x+sign*3.5,height+.55,t.z+off,trim);
+  const stairs=[];
+  // Hide only original modular wall instances: keep gates, castle and terrain.
+  let retiredWalls=0;
+  for(const child of g.terreno.group.children){
+    if(child===g.fort.grupo||!child.isGroup)continue;
+    const bounds=new nr().setFromObject(child), center=bounds.getCenter(new U());
+    if(sides.some(s=>{const dx=s.B.x-s.A.x,dz=s.B.z-s.A.z,l2=dx*dx+dz*dz;
+      const u=((center.x-s.A.x)*dx+(center.z-s.A.z)*dz)/l2;
+      return u>=0&&u<=1&&Math.hypot(center.x-s.A.x-u*dx,center.z-s.A.z-u*dz)<1;
+    })&&bounds.max.y>4&&bounds.max.y<10){child.visible=false;retiredWalls++;}
+  }
+  // Remove corner obstruction and shorten adjoining cardinal wall colliders.
+  for(let i=g.terreno.colliders.length-1;i>=0;i--){const c=g.terreno.colliders[i];
+    if(c.tipo==='circulo'&&towers.some(t=>Math.hypot(c.x-t.x,c.z-t.z)<4.8)){g.terreno.colliders.splice(i,1);continue;}
+    if(c.tipo==='caja'&&c.alto===height-.35){for(const t of towers){
+      if(c.maxX-c.minX>c.maxZ-c.minZ&&t.z>=c.minZ&&t.z<=c.maxZ){if(Math.abs(c.minX-t.x)<.1)c.minX+=4.5;if(Math.abs(c.maxX-t.x)<.1)c.maxX-=4.5;}
+      if(c.maxZ-c.minZ>c.maxX-c.minX&&t.x>=c.minX&&t.x<=c.maxX){if(Math.abs(c.minZ-t.z)<.1)c.minZ+=4.5;if(Math.abs(c.maxZ-t.z)<.1)c.maxZ-=4.5;}
+    }}
+  }
+  towers.forEach((t,index)=>{
+    const entry=Math.atan2(-t.z,-t.x);t.entry=entry;
+    // 48 facets make a round, hollow shell; the city-facing entrance is open.
+    for(let j=0;j<48;j++){
+      const a=entry+j*Math.PI*2/48, delta=Math.atan2(Math.sin(a-entry),Math.cos(a-entry));
+      const x=t.x+Math.cos(a)*4.15,z=t.z+Math.sin(a)*4.15;
+      const opening=Math.abs(delta)<.27;
+      box(.62,opening?height-3:height,.5,x,opening?(height+3)/2:height/2,z,stone,Math.PI/2-a);
+      if(!opening)g.terreno.colliders.push(pf(x,z,.34,height));
+      box(.62,.24,1.3,t.x+Math.cos(a)*4,height-.12,t.z+Math.sin(a)*4,trim,Math.PI/2-a);
+      // Ring cornice; no solid roof over the stairwell.
+      box(.64,.3,.7,x,height-.15,z,trim,Math.PI/2-a);
+      if(j%3===0)box(.65,.9,.6,x,height+.45,z,trim,Math.PI/2-a);
     }
-    const len=Math.hypot(t.x,t.z), nx=-t.x/len,nz=-t.z/len;
-    // Door canopy and heraldic banner face the city.
-    const a=Math.atan2(nx,nz);
-    box(1.5,2.7,.16,t.x+nx*3.6,1.35,t.z+nz*3.6,iron,a);
-    box(1.9,.25,.5,t.x+nx*3.65,2.8,t.z+nz*3.65,trim,a);
-    box(1.1,2,.12,t.x+nx*3.6,5.4,t.z+nz*3.6,cloth,a);
-    box(.15,1.4,.14,t.x+nx*3.7,5.4,t.z+nz*3.7,gold,a);
-    for(const c of g.terreno.colliders) if(c.tipo==='circulo'&&Math.hypot(c.x-t.x,c.z-t.z)<.1)c.alto=height;
+    for(let j=0;j<64;j++){
+      const a=entry+.35+j*Math.PI*2/64,y=(j+1)*height/64;
+      const x=t.x+Math.cos(a)*2.65,z=t.z+Math.sin(a)*2.65;
+      box(1.75,.18,.42,x,y-.09,z,trim,-a);
+      stairs.push({x,z,y,tower:index,angle:a});
+      box(.07,.95,.07,t.x+Math.cos(a)*1.72,y+.475,t.z+Math.sin(a)*1.72,iron);
+    }
+    // Central column, radial ribs, and two landings join the wall approaches.
+    const pillar=sf(.45,.55,height,'#777466',24);pillar.position.set(t.x,height/2,t.z);architecture.add(pillar);
+    g.terreno.colliders.push(pf(t.x,t.z,.55,height));
+    const door=doors[index];if(door){door.pos.set(t.x+Math.cos(entry)*4.3,0,t.z+Math.sin(entry)*4.3);door.abierta=true;}
   });
   function segment(x,z,s){const dx=s.B.x-s.A.x,dz=s.B.z-s.A.z,l2=dx*dx+dz*dz;
     const u=Math.max(0,Math.min(1,((x-s.A.x)*dx+(z-s.A.z)*dz)/l2));
     const px=s.A.x+dx*u,pz=s.A.z+dz*u;return {x:px,z:pz,d:Math.hypot(x-px,z-pz)};}
   sides.forEach(s=>{
     const dx=s.B.x-s.A.x,dz=s.B.z-s.A.z,len=Math.hypot(dx,dz),a=Math.atan2(dx,dz),nx=dz/len,nz=-dx/len;
-    box(3,.35,len,s.medio.x,height-.175,s.medio.z,stone,a);
+    // Independent deck starts outside the hollow towers, avoiding coplanar roofs.
+    box(3,.35,len-7.8,s.medio.x,height-.175,s.medio.z,stone,a);
+    const body=(start,end)=>{if(end<=start)return;const mid=(start+end)/2;
+      box(3,height-.35,end-start,s.A.x+dx*mid/len,(height-.35)/2,s.A.z+dz*mid/len,stone,a);};
+    if(s.cardinal){body(4.5,len/2-5);body(len/2+5,len-4.5);}else body(4.5,len-4.5);
     for(const sign of [-1,1]) {
-      box(.28,.7,len-7,s.medio.x+sign*nx*1.6,height+.35,s.medio.z+sign*nz*1.6,trim,a);
-      for(let k=4;k<len-4;k+=2.4) box(.5,.55,1,s.A.x+dx*k/len+sign*nx*1.6,height+.975,s.A.z+dz*k/len+sign*nz*1.6,stone,a);
+      box(.28,.7,len-9,s.medio.x+sign*nx*1.6,height+.35,s.medio.z+sign*nz*1.6,trim,a);
+      for(let k=5;k<len-5;k+=2.4) box(.5,.55,1,s.A.x+dx*k/len+sign*nx*1.6,height+.975,s.A.z+dz*k/len+sign*nz*1.6,stone,a);
     }
   });
   // Batch repeated stonework into one draw call per shared material.
@@ -75,39 +106,36 @@
     batch.castShadow=true;batch.receiveShadow=true;architecture.add(batch);
   }
   const ground=g.terreno.alturaSuelo.bind(g.terreno);
-  const onDeck=(x,z)=>towers.some(t=>Math.max(Math.abs(t.x-x),Math.abs(t.z-z))<=3.8)||sides.some(s=>segment(x,z,s).d<=1.65);
-  g.terreno.alturaSuelo=(x,z,y)=>y>=height-.6&&onDeck(x,z)?Math.max(height,ground(x,z,y)):ground(x,z,y);
-  const teleport=(x,y,z)=>{g.rey.pos.set(x,y,z);g.rey.modelo.position.copy(g.rey.pos);g.rey.velY=0;g.rey.velHorizontal.set(0,0,0);g.rey.enSuelo=true;g.camRig.iniciado=false;};
-  g._subirTorre=()=>{
-    const t=g.enTorre.puerta.ref.centro;g.enTorre.interior.dispose(g.terreno);g.enTorre=null;
-    teleport(t.x,height,t.z);g._avisoRey('Muralla · Recorre las pasarelas. R junto a una torre para bajar.');
+  const onDeck=(x,z)=>towers.some(t=>{const d=Math.hypot(t.x-x,t.z-z);return d>=3.35&&d<=4.65;})||sides.some(s=>segment(x,z,s).d<=1.65&&towers.every(t=>Math.hypot(x-t.x,z-t.z)>3.8));
+  g.terreno.alturaSuelo=(x,z,y)=>{
+    let floor=ground(x,z,y);
+    for(const step of stairs){const dx=x-step.x,dz=z-step.z;
+      if(Math.abs(dx*Math.cos(step.angle)+dz*Math.sin(step.angle))<=.9&&Math.abs(-dx*Math.sin(step.angle)+dz*Math.cos(step.angle))<=.23&&step.y<=y+.22)floor=Math.max(floor,step.y);}
+    if(y>=height-.22&&onDeck(x,z))floor=Math.max(height,floor);
+    return floor;
   };
+  const teleport=(x,y,z)=>{g.rey.pos.set(x,y,z);g.rey.modelo.position.copy(g.rey.pos);g.rey.velY=0;g.rey.velHorizontal.set(0,0,0);g.rey.enSuelo=true;g.camRig.iniciado=false;};
+  g._entrarTorre=door=>{const t=door.ref.centro,a=Math.atan2(-t.z,-t.x);teleport(t.x+Math.cos(a)*3.1,0,t.z+Math.sin(a)*3.1);};
+  // Preserve old saved callers, but normal play uses the physical staircase.
+  g._subirTorre=()=>{if(!g.enTorre)return;const t=g.enTorre.puerta.ref.centro;g.enTorre.interior.dispose(g.terreno);g.enTorre=null;teleport(t.x+3,height,t.z);};
   const tip=document.createElement('div');tip.id='muralla-ayuda';document.getElementById('hud').append(tip);
-  const originalUpdate=g.rey.update.bind(g.rey);
-  g.rey.update=(dt,input,cam,terrain)=>{
-    const previous=g.rey.pos.clone();originalUpdate(dt,input,cam,terrain);
-    // Parapets keep walking, sprinting and dodging on the narrow battlements.
-    if(previous.y>=height-.1&&onDeck(previous.x,previous.z)&&!onDeck(g.rey.pos.x,g.rey.pos.z)&&!g.enInterior){
-      g.rey.pos.x=previous.x;g.rey.pos.z=previous.z;g.rey.modelo.position.copy(g.rey.pos);
-    }
+  const oldFort=g._gestionarFortaleza.bind(g);
+  g._gestionarFortaleza=()=>{
+    const t=towers.find(t=>Math.hypot(t.x-g.rey.pos.x,t.z-g.rey.pos.z)<7);
+    if(t&&!g.enInterior){g._eTomada=false;g._textoFort=null;return;}
+    oldFort();
   };
   const originalFrame=g._frame.bind(g);
   g._frame=now=>{
-    const nearest=towers.reduce((a,t)=>Math.hypot(t.x-g.rey.pos.x,t.z-g.rey.pos.z)<Math.hypot(a.x-g.rey.pos.x,a.z-g.rey.pos.z)?t:a);
-    const near=Math.hypot(nearest.x-g.rey.pos.x,nearest.z-g.rey.pos.z)<8;
-    const active=near&&!g.enInterior&&!g.mazmorra&&!g.menu.abierto&&!g._hayPanelAbierto()&&!g.rey.muerto;
-    tip.hidden=!active;const above=g.rey.pos.y>=height-.5;
-    tip.textContent=above?'R · Bajar de la muralla':'R · Subir a la torre';
-    if(active&&g.input.presionada('KeyR')){
-      if(above){const l=Math.hypot(nearest.x,nearest.z);teleport(nearest.x-nearest.x/l*7,0,nearest.z-nearest.z/l*7);}
-      else teleport(nearest.x,height,nearest.z);
-    }
+    const t=towers.find(t=>Math.hypot(t.x-g.rey.pos.x,t.z-g.rey.pos.z)<7);
+    tip.hidden=!t||g.enInterior||g.menu.abierto||g._hayPanelAbierto();
+    tip.textContent=g.rey.pos.y>height-.3?'Escalera interior · Baja caminando por el caracol':'Torre de guardia · Entra y sube por la escalera de caracol';
     originalFrame(now);
   };
   const ambient=g._actualizarAmbiente.bind(g);
   g._actualizarAmbiente=dt=>{ambient(dt);g.hemi.intensity*=1.25;};
   g.renderer.toneMappingExposure=1.12;
-  g.visualUpgrade={height,towers,sides,onDeck,meshes:meshes.length};
+  g.visualUpgrade={height,towers,sides,onDeck,meshes:meshes.length,stairs,retiredWalls};
 
   // Compact treasury with all resources still accessible.
   const treasury=document.createElement('section');treasury.id='tesoreria';
@@ -116,7 +144,7 @@
   treasury.append(document.getElementById('recursos'));
   const toggle=treasury.querySelector('button');toggle.onclick=()=>{const open=treasury.classList.toggle('expandido');toggle.setAttribute('aria-expanded',String(open));};
   const brand=document.createElement('div');brand.id='marca-reino';brand.innerHTML='<span>♜</span> REINO DE HIERRO <small>GUARDIÁN DE LA FORTALEZA</small>';document.getElementById('hud').append(brand);
-  document.getElementById('hint').textContent='WASD Mover · Shift Correr · C Esquivar · E Interactuar · R Muralla · H Ayuda · Esc Pausa';
-  const note=document.createElement('p');note.textContent='Murallas: acércate a una torre y pulsa R para subir. Recorre las pasarelas y vuelve a pulsar R junto a una torre para bajar. También puedes subir por la escalera del interior con E.';
+  document.getElementById('hint').textContent='WASD Mover · Shift Correr · C Esquivar · E Interactuar · H Ayuda · Esc Pausa';
+  const note=document.createElement('p');note.textContent='Murallas: entra por el arco de una torre desde la ciudad. Recorre la escalera de caracol con WASD hasta la pasarela. Para bajar, recorre los peldaños en sentido contrario.';
   document.querySelector('#guia-juego ol').after(note);
 })();

@@ -23,7 +23,7 @@ replace_once('fps:e?.fps??!0', 'fps:e?.fps??!1')
 replace_once('fps:!0}}}var Iv=', 'fps:!1}}}var Iv=')
 replace_once('window.__juego=Iv,await Iv.preparar(),Iv.iniciar();',
              'window.__juego=Iv;await Iv.preparar();\n' +
-             (ROOT / 'src/gameplay.js').read_text() + '\n' + (ROOT / 'src/visual.js').read_text() + '\nIv.iniciar();')
+             (ROOT / 'src/gameplay.js').read_text() + '\n' + (ROOT / 'src/visual.js').read_text() + '\n' + (ROOT / 'src/city.js').read_text() + '\nIv.iniciar();')
 replace_once('</head>', '<style id="visual-theme">\n' + (ROOT / 'src/gameplay.css').read_text() + (ROOT / 'src/visual.css').read_text() + '\n</style></head>')
 (ROOT / 'Reino-de-Hierro.html').write_text(html)
 with ZipFile(ROOT / 'Reino-de-Hierro-mejorado.zip', 'w', ZIP_DEFLATED) as archive:

@@ -40,10 +40,14 @@ Las pruebas arrancan su propio servidor en el puerto 8127 y ejecutan el juego re
 
 La revisión automática de CodeRabbit no pudo ejecutarse: la descarga de su instalador respondió HTTP 403. Para completarla hace falta acceso a `cli.coderabbit.ai` e iniciar sesión en CodeRabbit.
 
-## Actualización visual y murallas
+## Ciudad y torres circulares
 
-`src/visual.js` incorpora ocho torres procedurales, pasarelas continuas, parapetos, remates de piedra, puertas y estandartes. La textura de mampostería de 1024 × 1024 se genera de forma determinista, con variaciones de piedra, juntas y musgo; se reutiliza como mapa de relieve. Son elementos originales generados por código, sin modelos descargados ni generación mediante servicios externos. Los modelos anteriores del resto del juego se conservan.
+Las ocho torres son huecas y redondeadas, con una escalera interior de 64 peldaños transitables. Entra por el arco orientado hacia la ciudad y camina con WASD por el caracol hasta la pasarela. Baja por el mismo recorrido. El antiguo atajo R ya no se utiliza.
 
-Acércate a una torre y pulsa **R** para subir a su plataforma o bajar al patio. La escalera interior con **E** también conecta con el exterior. Los parapetos impiden salir accidentalmente de la pasarela al correr o esquivar. La tesorería de la esquina superior derecha se despliega para consultar todos los recursos.
+Se retiraron 52 módulos visuales antiguos de muralla antes de colocar los nuevos, recortando sus encuentros para dejar libres las torres. La comprobación de volúmenes detectó una intersección entre la escuela mágica y el molino; se ajustaron las dimensiones de los edificios a sus parcelas y se actualizaron sus colisiones. No quedan intersecciones entre los volúmenes de edificios en el estado inicial comprobado; esto no certifica todos los estados posibles de una campaña.
 
-El tema visual está en `src/visual.css`: paneles azul petróleo, bordes dorados, vida y maná abajo a la izquierda y hechizos en la parte inferior. Se mejora la luz ambiental sin eliminar el ciclo de día y noche. No se afirma calidad fotorealista ni sustitución completa de los modelos originales. La herramienta `game-dev` no estaba disponible; no se produjo un paquete GLB externo.
+`src/city.js` mejora materiales y dimensiones de los edificios existentes y añade cuatro barrios con nueve conjuntos de mobiliario cada uno: Forja (cajas y suministros), Bastión del Norte (armeros), Barrio del Pan (puestos cubiertos) y Jardines del Saber (jardineras). Las ubicaciones evitan edificios, avenidas principales y corredores de acceso. Los modelos base se conservan; no es una sustitución completa de todos los edificios por modelos externos.
+
+`src/visual.js` genera arquitectura original y una textura de mampostería de 1024 × 1024 con juntas, variación mineral y musgo. Las piezas repetidas se agrupan por material para reducir llamadas de dibujo. El tema del HUD está en `src/visual.css`.
+
+La herramienta `game-dev` no estaba disponible; los modelos nuevos se crean directamente con el motor del juego. No se generaron paquetes GLB externos ni se usaron proveedores de pago.

@@ -76,18 +76,33 @@ const path = require('node:path');
       reset(); g.rey.vida = 25; for(let i=0;i<6;i++) frame();
       check('La barra de vida refleja daño y alerta', document.getElementById('vida-barra').value === 25 && document.getElementById('estado-rey').classList.contains('peligro'));
       reset();
-      const v = g.visualUpgrade, tower = v.towers[0], length = Math.hypot(tower.x,tower.z);
-      g.rey.pos.set(tower.x-tower.x/length*7,0,tower.z-tower.z/length*7);
-      press('KeyR');
-      check('R sube a la plataforma exterior', Math.abs(g.rey.pos.y-v.height)<.05 && !g.enInterior);
-      for(let i=0;i<12;i++)frame();
-      check('La torre sostiene al rey sin caída ni expulsión', Math.abs(g.rey.pos.y-v.height)<.05 && Math.hypot(g.rey.pos.x-tower.x,g.rey.pos.z-tower.z)<1);
+      const v=g.visualUpgrade;
+      check('Murallas antiguas retiradas antes de reemplazarlas',v.retiredWalls>0);
+      const steps=v.stairs.filter(s=>s.tower===0);
+      g.rey.pos.set(steps[0].x,0,steps[0].z);g.rey.velY=0;g.rey.enSuelo=true;
+      let ascend=true;
+      for(const step of steps){g.rey.pos.x=step.x;g.rey.pos.z=step.z;g.rey.update(.02,input,g.camRig,g.terreno);
+        ascend&&=Math.abs(g.rey.pos.y-step.y)<.2&&Math.hypot(g.rey.pos.x-step.x,g.rey.pos.z-step.z)<.2;}
+      check('64 peldaños físicos suben sin atravesar las paredes',ascend&&g.rey.pos.y>v.height-.2);
+      let descend=true;
+      for(const step of [...steps].reverse()){g.rey.pos.x=step.x;g.rey.pos.z=step.z;for(let n=0;n<5;n++)g.rey.update(.02,input,g.camRig,g.terreno);descend&&=Math.abs(g.rey.pos.y-step.y)<.25;}
+      check('La misma escalera permite bajar caminando',descend&&g.rey.pos.y<.3);
+      g.rey.pos.set(steps[0].x,0,steps[0].z);g.rey.velY=0;input.teclas.add('KeyW');
+      let walk=true;
+      for(const step of steps){let n=0;
+        while(Math.hypot(g.rey.pos.x-step.x,g.rey.pos.z-step.z)>.08&&n++<30){
+          const forward=g.rey.pos.clone().set(step.x-g.rey.pos.x,0,step.z-g.rey.pos.z).normalize();
+          g.rey.update(.01,input,{adelante:forward},g.terreno);
+        }
+        walk&&=n<30;
+      }
+      input.teclas.clear();
+      check('Ascenso continuo con controles de movimiento reales',walk&&g.rey.pos.y>v.height-.25);
+
       check('Las ocho pasarelas tienen suelo continuo',v.sides.every(s=>[.1,.25,.5,.75,.9].every(t=>g.terreno.alturaSuelo(s.A.x+(s.B.x-s.A.x)*t,s.A.z+(s.B.z-s.A.z)*t,v.height)===v.height)));
-      press('KeyR');
-      check('R baja al patio de forma segura',g.rey.pos.y===0 && Math.hypot(g.rey.pos.x-tower.x,g.rey.pos.z-tower.z)>6);
-      const door=g.fort.puertas.find(p=>p.nombre.startsWith('Puerta de la torre'));
-      g._entrarTorre(door);g._subirTorre();frame();
-      check('Escalera interior conecta con la muralla exterior',!g.enTorre && Math.abs(g.rey.pos.y-v.height)<.05);
+      check('Edificios sin intersecciones de sus volúmenes',g.cityAudit.after.length===0);
+      check('Los cuatro barrios tienen mobiliario propio',Object.values(g.cityAudit.counts).every(n=>n>0));
+      console.log('AUDIT',JSON.stringify(g.cityAudit));
       const button=document.querySelector('#tesoreria button');button.click();
       check('La tesorería permite desplegar todos los recursos',button.getAttribute('aria-expanded')==='true');button.click();
       g.rey.pos.set(0,0,28);g.rey.modelo.position.copy(g.rey.pos);g.camRig.iniciado=false;
