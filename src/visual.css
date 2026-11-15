@@ -1,0 +1,25 @@
+:root { --oro:#d6bd83; --borde:#c4ac704f; --panel:linear-gradient(145deg,#14272ef2,#0b141de8); }
+#hud { color:#f2eddf; font-family:Segoe UI,system-ui,sans-serif; }
+#marca-reino {position:fixed;left:24px;top:20px;letter-spacing:3px;font-size:15px;color:var(--oro);font-family:Georgia,serif;}
+#marca-reino > span{font-size:28px;margin-right:8px;}#marca-reino small{display:block;margin-left:40px;font:9px Segoe UI,sans-serif;letter-spacing:2px;color:#9eaeb5;}
+#estado-rey {top:auto;bottom:110px;left:24px;width:235px;background:var(--panel);border:1px solid var(--borde);padding:16px;border-radius:12px;box-shadow:0 8px 30px #0005;}
+#estado-rey strong{font:16px Georgia,serif;}#estado-rey progress{height:9px;border:0;border-radius:6px;overflow:hidden;}#estado-rey progress::-webkit-progress-bar{background:#253334;}#estado-rey progress::-webkit-progress-value{background:linear-gradient(90deg,#39765e,#9fd9a1);}
+#mana-hud {top:auto;bottom:43px;left:24px;width:235px;padding:12px 16px;background:var(--panel);border:1px solid var(--borde);border-radius:10px;color:#b6d1f1;}
+#mana-hud .relleno{background:linear-gradient(90deg,#4165a1,#8cc8eb);}
+#dia-hud {top:22px;padding:10px 20px;border:1px solid var(--borde);border-radius:30px;background:var(--panel);font-size:12px;letter-spacing:.5px;}
+#castillo-hud {top:70px;padding:10px 16px;width:220px;background:var(--panel);border:1px solid var(--borde);border-radius:10px;font-size:11px;}
+#castillo-hud .barra{height:4px;background:#33352b;}#castillo-hud .relleno{background:linear-gradient(90deg,#a8894e,#e2ca92);}
+#tesoreria {position:fixed;right:24px;top:24px;width:230px;background:var(--panel);border:1px solid var(--borde);border-radius:12px;overflow:hidden;pointer-events:auto;box-shadow:0 8px 30px #0005;}
+#tesoreria>button{width:100%;padding:14px 16px;border:0;background:transparent;color:var(--oro);text-align:left;letter-spacing:2px;cursor:pointer;font-size:11px;}#tesoreria>button span{display:block;margin-top:6px;color:#a2b4bd;letter-spacing:0;font-size:11px;}
+#tesoreria #recursos {position:static!important;margin:0!important;padding:0 14px 12px!important;background:transparent!important;max-height:170px;overflow:hidden;font-size:12px!important;}
+#tesoreria:not(.expandido) #recursos>div:nth-child(n+8){display:none!important;}
+#tesoreria.expandido #recursos{max-height:55vh;overflow:auto;}
+#hechizos-hud{bottom:55px;gap:8px;}#hechizos-hud .slot{box-sizing:border-box;width:110px;min-height:66px;padding:12px;background:var(--panel);border:1px solid var(--borde);border-radius:10px;box-shadow:0 6px 24px #0006;}#hechizos-hud .tecla{display:inline-block;margin-right:5px;color:var(--oro);font-size:15px;}#hechizos-hud .costo{margin-top:7px;color:#a7bcc9;}
+#hint{left:50%;transform:translateX(-50%);bottom:10px;white-space:nowrap;font-size:10px;letter-spacing:.3px;background:#0b141dc9;color:#bdc9ce;border-radius:20px;}
+#prompt,#muralla-ayuda{position:fixed;left:50%;transform:translateX(-50%);bottom:155px;border:1px solid var(--borde);background:var(--panel);padding:12px 20px;border-radius:8px;color:var(--oro);font-size:13px;}
+#muralla-ayuda[hidden]{display:none;}#debug{top:300px;right:24px;}
+#panel-inventario,#panel-edificio,#panel-habitantes,#calendario,#dialogo-ui,#menu-pausa .caja{background:var(--panel)!important;border:1px solid var(--borde)!important;border-radius:14px!important;box-shadow:0 20px 80px #0009;color:#eee7d5;}
+#hud button{transition:background .15s,border-color .15s;}#hud button:hover{border-color:var(--oro);filter:brightness(1.18);}button:focus-visible{outline:2px solid #e8d7a4;outline-offset:3px;}
+#hud select,#hud input{accent-color:#c3a666;}#hud h2,#hud h3{color:var(--oro);font-family:Georgia,serif;}*{scrollbar-width:thin;scrollbar-color:#8d825f #14212b;}
+@media(max-width:1000px){#marca-reino{font-size:11px;left:12px;letter-spacing:1px;}#marca-reino small{display:none;}#tesoreria{right:12px;width:185px;}#estado-rey,#mana-hud{left:12px;width:165px;padding:10px;}#hechizos-hud{left:auto;right:12px;transform:none;}#hint{font-size:9px;white-space:normal;width:max-content;max-width:90vw;}#dia-hud{font-size:10px;}#hechizos-hud .slot{width:90px;}}
+@media(max-width:650px){#marca-reino{display:none;}#dia-hud{left:12px;transform:none;top:12px;}#castillo-hud{left:12px;transform:none;top:50px;width:150px;}#tesoreria{width:155px;top:12px;}#tesoreria:not(.expandido) #recursos{display:none;}#hechizos-hud{bottom:40px;gap:3px;}#hechizos-hud .slot{width:58px;padding:6px;font-size:9px;}#estado-rey,#mana-hud{width:120px;font-size:10px;}#estado-rey{bottom:104px;}#mana-hud{bottom:46px;}#estado-rey strong{font-size:12px;}}
