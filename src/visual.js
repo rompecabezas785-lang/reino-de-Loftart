@@ -22,6 +22,7 @@
   texture.wrapS=texture.wrapT=1000; texture.anisotropy=Math.min(4,g.renderer.capabilities.getMaxAnisotropy());
   const stone=new Xo({map:texture,bumpMap:texture,bumpScale:.08,roughness:.93,color:0xc6c5b4});
   const trim=new Xo({color:0xc2b69b,roughness:.85});
+  const roofMaterial=trim.clone();roofMaterial.polygonOffset=true;roofMaterial.polygonOffsetFactor=-2;roofMaterial.polygonOffsetUnits=-2;
   const iron=new Xo({color:0x39454b,roughness:.42,metalness:.65});
   const gold=new Xo({color:0xb9934b,roughness:.38,metalness:.55});
   const cloth=new Xo({color:0x284d65,roughness:1});
@@ -33,7 +34,52 @@
   }
   const doors=g.fort.puertas.filter(p=>p.nombre.startsWith('Puerta de la torre'));
   for(const door of doors) door.root.visible=false;
-  const stairs=[];
+  const stairs=[],towerDoors=[];
+  const turn=Math.PI*2,stairArc=63*turn/64,hatchStart=stairArc-1.55;
+  const phaseAt=(t,x,z)=>((Math.atan2(z-t.z,x-t.x)-t.entry-.35)%turn+turn)%turn;
+  const roofAt=(t,x,z)=>{const radius=Math.hypot(x-t.x,z-t.z),phase=phaseAt(t,x,z);
+    return radius<=4.65&&!(radius>1.65&&radius<3.6&&phase>hatchStart&&phase<stairArc-.06);
+  };
+  const doorWood=new Xo({color:0x735035,roughness:.85});
+  function makeDoor(t){
+    const frame=new Mn(),normal={x:Math.cos(t.entry),z:Math.sin(t.entry)};
+    frame.position.set(t.x+normal.x*4.15,0,t.z+normal.z*4.15);frame.rotation.y=Math.PI/2-t.entry;architecture.add(frame);
+    const leaves=[];
+    for(const sign of [-1,1]){const hinge=new Mn();hinge.position.x=sign*1.2;frame.add(hinge);
+      const leaf=Z(1.2,2.8,.18,'#735035');leaf.material=doorWood;leaf.position.set(-sign*.6,1.4,0);leaf.castShadow=true;hinge.add(leaf);
+      for(const y of [.5,2.3]){const brace=Z(1.15,.14,.22,'#39454b');brace.material=iron;brace.position.set(-sign*.6,y,0);hinge.add(brace);}
+      leaves.push({hinge,sign});
+    }
+    const blocks=Array.from({length:7},(_,i)=>pf(frame.position.x+Math.sin(t.entry)*(i-3)*.36,frame.position.z-Math.cos(t.entry)*(i-3)*.36,.27,3));
+    const state={frame,open:true,progress:1,blocks,blocked:false};
+    const occupied=()=>[g.rey,...g.soldados,...g.magos,...g.enemigos].some(e=>{if(!e.pos||e.muerto||e.vivo===false||e.pos.y>=3)return false;
+      const dx=e.pos.x-frame.position.x,dz=e.pos.z-frame.position.z;
+      return Math.abs(dx*normal.x+dz*normal.z)<.85&&Math.abs(dx*normal.z-dz*normal.x)<1.75;
+    });
+    state.toggle=()=>{if(state.open&&occupied()){g._avisoRey('La entrada está ocupada. Apártate para cerrar.');return false;}state.open=!state.open;return true;};
+    state.tick=dt=>{
+      if(!state.open&&state.progress>0&&occupied())state.open=true;
+      state.progress=Math.max(0,Math.min(1,state.progress+(state.open?1:-1)*dt*2));
+      for(const {hinge,sign} of leaves)hinge.rotation.y=sign*state.progress*Math.PI*.5;
+      const blocked=state.progress<.92;
+      if(blocked!==state.blocked){state.blocked=blocked;if(blocked)g.terreno.colliders.push(...blocks);else for(const block of blocks){const i=g.terreno.colliders.indexOf(block);if(i>=0)g.terreno.colliders.splice(i,1);}}
+    };
+    state.tick(0);towerDoors.push(state);
+  }
+  function makeRoof(t){
+    const vertices=[],indices=[];
+    const count=128;
+    for(let j=0;j<count;j++){
+      const a=t.entry+.35+j*turn/count,b=t.entry+.35+(j+1)*turn/count,phase=(j+.5)*turn/count;
+      const rings=phase>hatchStart&&phase<stairArc-.06?[[0,1.65],[3.6,4.65]]:[[0,4.65]];
+      for(const [inner,outer]of rings){const base=vertices.length/3;
+        for(const [r,angle]of [[inner,a],[outer,a],[outer,b],[inner,b]])vertices.push(t.x+Math.cos(angle)*r,height,t.z+Math.sin(angle)*r);
+        indices.push(base,base+2,base+1,base,base+3,base+2);
+      }
+    }
+    const geo=new Fr();geo.setAttribute('position',new Cr(vertices,3));geo.setIndex(indices);geo.computeVertexNormals();
+    const roof=new li(geo,roofMaterial);roof.name='Suelo superior con hueco de escalera';roof.receiveShadow=true;architecture.add(roof);
+  }
   // Hide only original modular wall instances: keep gates, castle and terrain.
   let retiredWalls=0;
   for(const child of g.terreno.group.children){
@@ -54,6 +100,7 @@
   }
   towers.forEach((t,index)=>{
     const entry=Math.atan2(-t.z,-t.x);t.entry=entry;
+    makeRoof(t);makeDoor(t);
     // 48 facets make a round, hollow shell; the city-facing entrance is open.
     for(let j=0;j<48;j++){
       const a=entry+j*Math.PI*2/48, delta=Math.atan2(Math.sin(a-entry),Math.cos(a-entry));
@@ -61,10 +108,12 @@
       const opening=Math.abs(delta)<.27;
       box(.62,opening?height-3:height,.5,x,opening?(height+3)/2:height/2,z,stone,Math.PI/2-a);
       if(!opening)g.terreno.colliders.push(pf(x,z,.34,height));
-      box(.62,.24,1.3,t.x+Math.cos(a)*4,height-.12,t.z+Math.sin(a)*4,trim,Math.PI/2-a);
+
       // Ring cornice; no solid roof over the stairwell.
       box(.64,.3,.7,x,height-.15,z,trim,Math.PI/2-a);
-      if(j%3===0)box(.65,.9,.6,x,height+.45,z,trim,Math.PI/2-a);
+      const passage=sides.some(s=>{const other=Math.hypot(s.A.x-t.x,s.A.z-t.z)<.1?s.B:Math.hypot(s.B.x-t.x,s.B.z-t.z)<.1?s.A:null;
+        if(!other)return false;const direction=Math.atan2(other.z-t.z,other.x-t.x);return Math.abs(Math.atan2(Math.sin(a-direction),Math.cos(a-direction)))<.4;});
+      if(j%3===0&&!passage)box(.65,.9,.6,x,height+.45,z,trim,Math.PI/2-a);
     }
     for(let j=0;j<64;j++){
       const a=entry+.35+j*Math.PI*2/64,y=(j+1)*height/64;
@@ -74,6 +123,14 @@
       for(const radius of [1.72,3.58]){
         box(.07,.95,.07,t.x+Math.cos(a)*radius,y+.475,t.z+Math.sin(a)*radius,iron);
         box(.08,.08,.42,t.x+Math.cos(a)*radius,y+.95,t.z+Math.sin(a)*radius,iron,-a);
+      }
+    }
+    // Guard the stair opening while leaving the upper landing clear.
+    for(let j=0;j<12;j++){
+      const a=entry+.35+hatchStart+j*(1.55-.2)/11;
+      for(const radius of [1.65,3.6]){
+        box(.08,.95,.08,t.x+Math.cos(a)*radius,height+.475,t.z+Math.sin(a)*radius,iron);
+        box(.08,.08,radius*.14,t.x+Math.cos(a)*radius,height+.95,t.z+Math.sin(a)*radius,iron,-a);
       }
     }
     const landingAngle=entry+.35+63*Math.PI*2/64;
@@ -111,9 +168,7 @@
     batch.castShadow=true;batch.receiveShadow=true;architecture.add(batch);
   }
   const ground=g.terreno.alturaSuelo.bind(g.terreno);
-  const onDeck=(x,z)=>towers.some(t=>{const d=Math.hypot(t.x-x,t.z-z);return d>=3.35&&d<=4.65;})||sides.some(s=>segment(x,z,s).d<=1.65&&towers.every(t=>Math.hypot(x-t.x,z-t.z)>3.8));
-  const turn=Math.PI*2, stairArc=63*turn/64;
-  const phaseAt=(t,x,z)=>((Math.atan2(z-t.z,x-t.x)-t.entry-.35)%turn+turn)%turn;
+  const onDeck=(x,z)=>towers.some(t=>roofAt(t,x,z))||sides.some(s=>segment(x,z,s).d<=1.65&&towers.every(t=>Math.hypot(x-t.x,z-t.z)>3.8));
   const rampAt=(t,x,z)=>{
     const radius=Math.hypot(x-t.x,z-t.z),phase=phaseAt(t,x,z);
     if(radius<1.75||radius>3.6||phase>stairArc+.025)return null;
@@ -172,7 +227,14 @@
   const oldFort=g._gestionarFortaleza.bind(g);
   g._gestionarFortaleza=()=>{
     const t=towers.find(t=>Math.hypot(t.x-g.rey.pos.x,t.z-g.rey.pos.z)<7);
-    if(t&&!g.enInterior){g._eTomada=false;g._textoFort=null;return;}
+    if(t&&!g.enInterior){g._eTomada=false;g._textoFort=null;
+      const door=towerDoors[towers.indexOf(t)];
+      if(g.rey.pos.y<2&&Math.hypot(g.rey.pos.x-door.frame.position.x,g.rey.pos.z-door.frame.position.z)<3&&!g._hayPanelAbierto()){
+        tip.textContent=`E · ${door.open?'Cerrar':'Abrir'} puerta de la torre`;
+        if(g.input.presionada('KeyE')){door.toggle();g._eTomada=true;}
+      }
+      return;
+    }
     oldFort();
   };
   const originalFrame=g._frame.bind(g);
@@ -183,9 +245,9 @@
     originalFrame(now);
   };
   const ambient=g._actualizarAmbiente.bind(g);
-  g._actualizarAmbiente=dt=>{ambient(dt);g.hemi.intensity*=1.25;};
+  g._actualizarAmbiente=dt=>{ambient(dt);g.hemi.intensity*=1.25;for(const door of towerDoors)door.tick(dt);};
   g.renderer.toneMappingExposure=1.12;
-  g.visualUpgrade={height,towers,sides,onDeck,meshes:meshes.length,stairs,retiredWalls};
+  g.visualUpgrade={height,towers,sides,onDeck,meshes:meshes.length,stairs,retiredWalls,towerDoors,roofAt};
 
   // Compact treasury with all resources still accessible.
   const treasury=document.createElement('section');treasury.id='tesoreria';
@@ -195,6 +257,6 @@
   const toggle=treasury.querySelector('button');toggle.onclick=()=>{const open=treasury.classList.toggle('expandido');toggle.setAttribute('aria-expanded',String(open));};
   const brand=document.createElement('div');brand.id='marca-reino';brand.innerHTML='<span>♜</span> REINO DE HIERRO <small>GUARDIÁN DE LA FORTALEZA</small>';document.getElementById('hud').append(brand);
   document.getElementById('hint').textContent='WASD Mover · Shift Correr · C Esquivar · E Interactuar · H Ayuda · Esc Pausa';
-  const note=document.createElement('p');note.textContent='Murallas: entra por el arco de una torre desde la ciudad. Recorre la escalera de caracol con WASD hasta la pasarela. Para bajar, recorre los peldaños en sentido contrario.';
+  const note=document.createElement('p');note.textContent='Murallas: abre o cierra la puerta con E y entra desde la ciudad. Recorre la escalera de caracol con WASD hasta la pasarela. Para bajar, recorre los peldaños en sentido contrario.';
   document.querySelector('#guia-juego ol').after(note);
 })();

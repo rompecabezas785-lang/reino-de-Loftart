@@ -12,6 +12,9 @@ def replace_once(old, new):
         raise RuntimeError(f'Unexpected upstream release: {old[:80]}')
     html = html.replace(old, new, 1)
 
+# Circular penetration must move away from the obstacle, not toward its center.
+replace_once('let c=Math.sqrt(s)||1e-4,l=(o-c)/c;e.x=i.x+n*l,e.z=i.z+a*l,r=!0',
+             'if(s<1e-12){e.x=i.x+o;r=!0;continue}let c=Math.sqrt(s),l=(o-c)/c;e.x+=n*l,e.z+=a*l,r=!0')
 # Q + number issues orders and must never also spend mana on a spell.
 replace_once('!this.modoMando&&!this._hayPanelAbierto()&&!this._hayPanelAbierto()',
              '!this.modoMando&&!this.input.abajo(`KeyQ`)&&!this.rey.muerto&&!this._hayPanelAbierto()')

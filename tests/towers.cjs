@@ -37,6 +37,10 @@ const path = require('node:path');
         }
         input.teclas.clear();return frames<250;
       }
+      for(const x of [0,1.5]){
+        place(x,0,0);k.update(.02,input,g.camRig,{alturaSuelo:()=>0,limitar:()=>{},colliders:[{tipo:'circulo',x:0,z:0,r:2,alto:3}]});
+        check(`Colisión circular resuelve penetración desde x=${x}`,Math.hypot(k.pos.x,k.pos.z)>=2+k.cfg.movimiento.radio-.001);
+      }
       for(let index=0;index<8;index++){
         const t=v.towers[index],steps=v.stairs.filter(s=>s.tower===index),start=steps[0],end=steps.at(-1);
         place(t.x+Math.cos(t.entry)*6,0,t.z+Math.sin(t.entry)*6);
@@ -59,6 +63,39 @@ const path = require('node:path');
         for(const step of [...steps].reverse())down=go(step.x,step.z,.05,true)&&down;
         down=go(t.x+Math.cos(t.entry)*6,t.z+Math.sin(t.entry)*6)&&down;
         check(`Torre ${index+1}: descenso y salida`,down&&k.pos.y<.5,{y:k.pos.y,down});
+      }
+      // Complete both directions of the wall circuit, with no repositioning between segments.
+      for(const reverse of [false,true]){
+        const order=reverse?[...v.sides].reverse():v.sides;
+        const first=reverse?order[0].B:order[0].A,next=reverse?order[0].A:order[0].B;
+        const a0=Math.atan2(next.z-first.z,next.x-first.x);
+        place(first.x+Math.cos(a0)*4,v.height,first.z+Math.sin(a0)*4);
+        let success=true,minHeight=v.height;
+        for(let i=0;i<order.length;i++){
+          const side=order[i],start=reverse?side.B:side.A,end=reverse?side.A:side.B;
+          const angle=Math.atan2(end.z-start.z,end.x-start.x),length=Math.hypot(end.x-start.x,end.z-start.z);
+          for(let d=4;d<=length-4;d+=2){success=go(start.x+Math.cos(angle)*d,start.z+Math.sin(angle)*d,.05,true)&&success;minHeight=Math.min(minHeight,k.pos.y);}
+          success=go(end.x-Math.cos(angle)*4,end.z-Math.sin(angle)*4)&&success;
+          const following=order[(i+1)%order.length],destination=reverse?following.A:following.B;
+          const from=angle+Math.PI,to=Math.atan2(destination.z-end.z,destination.x-end.x);
+          const delta=Math.atan2(Math.sin(to-from),Math.cos(to-from));
+          for(let n=1;n<=24;n++){const theta=from+delta*n/24;success=go(end.x+Math.cos(theta)*4,end.z+Math.sin(theta)*4)&&success;minHeight=Math.min(minHeight,k.pos.y);}
+        }
+        check(`Circuito completo de murallas ${reverse?'antihorario':'horario'}`,success&&minHeight>v.height-.2,{success,minHeight});
+      }
+      for(let i=0;i<8;i++){
+        const t=v.towers[i],door=v.towerDoors[i],nx=Math.cos(t.entry),nz=Math.sin(t.entry);
+        const interact=()=>{input.presionadasEsteFrame.add('KeyE');g._gestionarFortaleza();input.presionadasEsteFrame.clear();for(let j=0;j<60;j++)door.tick(1/60);};
+        place(t.x+nx*6,0,t.z+nz*6);interact();
+        const blocked=!go(t.x+nx*3,t.z+nz*3);
+        check(`Puerta ${i+1}: E cierra y bloquea el paso`,!door.open&&door.progress===0&&door.blocked&&blocked,{open:door.open,progress:door.progress,blocked:door.blocked,stopped:blocked,position:k.pos.toArray(),blocks:door.blocks.map(b=>g.terreno.colliders.includes(b))});
+        interact();const crossed=go(t.x+nx*3,t.z+nz*3);
+        check(`Puerta ${i+1}: E abre y permite entrar`,door.open&&door.progress===1&&!door.blocked&&crossed);
+        // Close and reopen from the inside.
+        interact();const closedInside=!door.open;interact();
+        check(`Puerta ${i+1}: control desde dentro`,closedInside&&door.open);
+        place(door.frame.position.x,0,door.frame.position.z);interact();
+        check(`Puerta ${i+1}: no cierra sobre el personaje`,door.open&&!door.blocked);
       }
       const t=v.towers[0],step=v.stairs[32];
       for(const direction of [-1,1]){

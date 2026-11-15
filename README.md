@@ -57,3 +57,11 @@ La herramienta `game-dev` no estaba disponible; los modelos nuevos se crean dire
 Se reprodujo la caída al correr a 20 FPS: el desplazamiento saltaba más de un peldaño por actualización y el detector rechazaba el siguiente apoyo. Las barandillas anteriores tampoco tenían protección física lateral. La versión corregida usa una superficie de apoyo continua bajo los peldaños, pasos de física de hasta 1/120 s cerca de las torres, límites laterales y un desembarco que conecta la escalera con el anillo superior. Los saltos siguen usando su velocidad vertical; las pulsaciones únicas no se repiten al subdividir la física.
 
 `tests/towers.cjs` recorre las ocho torres desde el patio, sube corriendo, sale hacia la muralla, vuelve y baja. Incluye empujes contra los dos laterales y una esquiva. La regresión inicial falló en las 26 comprobaciones originales de esta suite. Las pruebas anteriores de centros de peldaño no cubrían estos recorridos a baja frecuencia.
+
+## Suelo superior y puertas
+
+La coronación de cada torre ahora tiene un piso circular amplio, con un hueco protegido que deja espacio para subir y bajar la escalera. Las salidas hacia las dos murallas quedan libres de almenas. El recorrido perimetral se comprueba completo en ambos sentidos, manteniendo la altura de la pasarela.
+
+Cada entrada tiene una puerta de dos hojas. Pulsa **E** cerca de ella, desde fuera o desde dentro, para abrirla o cerrarla. Las hojas se animan, la puerta cerrada bloquea el paso y el cierre se rechaza si el personaje u otra unidad ocupa el umbral. Las puertas comienzan abiertas y su estado es local a la sesión; no se añade a las partidas guardadas.
+
+Se corrigió además la resolución de penetración de los obstáculos circulares del código original: desplazaba el personaje hacia el centro en vez de separarlo. Hay pruebas para penetración parcial y para coincidencia exacta con el centro. La validación de esta actualización ejecuta 23 comprobaciones generales y 71 de torres, circuitos, puertas y colisiones.
