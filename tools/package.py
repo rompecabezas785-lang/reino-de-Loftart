@@ -21,6 +21,12 @@ Abrí Reino-de-Hierro.html desde ese servidor en un navegador con WebGL.
 E: puertas, escaleras, termas y entrenamiento. WASD: movimiento.
 Clic en el juego: capturar ratón. C: esquivar. P: habitantes.
 
+Sótano: cocina, servicio, despensa y calabozo.
+Planta baja: vestíbulo y salón del trono independiente con puertas dobles.
+Primera planta: baile, biblioteca, capilla, entrenamiento y balcones.
+Segunda planta: oficinas, dormitorio real y termas.
+En el descansillo sur: escalera derecha para subir, izquierda para bajar.
+
 Código editable e instrucciones:
 https://github.com/rompecabezas785-lang/reino-de-Loftart
 ''')

@@ -17,7 +17,16 @@ Abrir `Reino-de-Hierro.html` desde ese servidor. La compilación requiere Python
 
 ## Explorar
 
-Abrí la puerta del castillo con **E** y volvé a pulsar **E** cerca de la entrada. **WASD** mueve al personaje; clic en el juego captura el ratón. Las placas indican las salas. La galería conecta biblioteca, cocina, salón de bailes, salón del trono, oficina principal, oficina con chimenea, baños termales, sala de entrenamiento y capilla con plantas. Las escaleras, activadas con **E**, llevan a ambos balcones exteriores, al calabozo y a las dependencias del servicio.
+Abrí la puerta del castillo con **E** y volvé a pulsar **E** cerca de la entrada. **WASD** mueve al personaje; clic en el juego captura el ratón. El castillo tiene cuatro niveles a distintas alturas, con descansillos y escaleras señalizadas. **E** en la escalera cambia a la planta contigua. El indicador muestra la planta y la habitación actuales.
+
+| Nivel | Distribución |
+| --- | --- |
+| Sótano | Cocina, despensa y bodega, dependencias del servicio y calabozo. |
+| Planta baja | Vestíbulo de recepción y salón del trono independiente, cerrado por puertas dobles que se abren desde ambos lados con **E**. No hay otras habitaciones en esta planta. |
+| Primera planta | Salón de bailes, biblioteca, capilla, sala de entrenamiento y accesos a los dos balcones. |
+| Segunda planta | Oficina principal, oficina con chimenea, dormitorio real con dosel y baños termales. |
+
+Las escaleras están en el vestíbulo o descansillo sur: a la derecha se sube y a la izquierda se baja. La salida al exterior está únicamente en la planta baja. Los balcones devuelven a su descansillo en la primera planta.
 
 - **Balcones:** se puede caminar por las plataformas; **E** vuelve al interior.
 - **Termas:** **E** junto a la piscina restaura la vida.
@@ -40,4 +49,4 @@ node --check src/castillo.js
 python tests/behavior.py
 ```
 
-Las pruebas ejecutan el juego real: accesibilidad mediante sus colisiones, transiciones con E, soporte de los balcones, termas, ataque y esquiva del espíritu, final no letal, personal en la interfaz, guardado/carga y restauración del exterior. Las capturas se escriben en `tests/artifacts/`.
+Las pruebas ejecutan el juego real: aislamiento del trono con puertas cerradas, accesibilidad de todas las salas y escaleras, cambios de planta con E, suelo y cámara a cada altura (incluido el sótano), regreso de los balcones a la primera planta, termas, ataque y esquiva del espíritu, final no letal, personal en la interfaz, guardado/carga y restauración del exterior. Las capturas de las cuatro plantas se escriben en `tests/artifacts/`.
