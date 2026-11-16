@@ -15,11 +15,15 @@
     !!target.closest('input, select, textarea, [contenteditable="true"]');
   // Capture phase prevents global game shortcuts from hijacking form controls.
   window.addEventListener('keydown', event => {
-    if (editable(event.target) && event.code !== 'Escape') {
+    if (editable(event.target) && !event.target.closest('#lf-dialog') && event.code !== 'Escape') {
       event.stopImmediatePropagation();
       return;
     }
-    if (['Tab', 'Space'].includes(event.code)) event.preventDefault();
+    if (event.target.closest?.('button') && !event.target.closest('#lf-dialog') && ['Tab', 'Space', 'Enter'].includes(event.code)) {
+      event.stopImmediatePropagation();
+      return;
+    }
+    if (['Tab', 'Space'].includes(event.code) && !event.target.closest?.('button, [role=dialog]')) event.preventDefault();
   }, true);
 
   const originalPanelCheck = game._hayPanelAbierto.bind(game);

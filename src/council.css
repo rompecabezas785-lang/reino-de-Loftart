@@ -1,0 +1,13 @@
+#lc-tabs{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 18px;padding:0 0 12px;border-bottom:1px solid #68817c}
+#lc-tabs button[aria-pressed=true]{background:#d5c08a;color:#102029;border-color:#fff}
+#lc-body>label{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin:12px 0}
+#lc-body input[type=search],#lf-journal-search{box-sizing:border-box;max-width:100%;min-height:36px;background:#0c1b23;border:1px solid #73918c;border-radius:5px;color:white;padding:7px;font:inherit}
+#lc-body input[type=number]{width:80px}#lc-body input[type=checkbox]{min-width:20px;min-height:20px;accent-color:#e2c987}
+.lc-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(220px,100%),1fr));gap:10px;margin:12px 0}
+.lc-card{display:block;border:1px solid #526f70;border-radius:8px;padding:12px;background:#0b1a2366;overflow-wrap:anywhere}.lc-card p{margin:6px 0;color:#d0dfde}.lc-card strong{color:#f1d49a}
+.lc-actions,#lf-map-tools{display:flex;flex-wrap:wrap;align-items:center;gap:7px;margin:12px 0}#lf-map-tools label{display:flex;align-items:center;gap:5px}
+.lc-confirm{border:2px solid #dfc78b;padding:14px;border-radius:8px;margin:12px 0;background:#263943}.lc-confirm button{margin-right:8px}
+#lf-dialog button:disabled{opacity:.5;cursor:not-allowed}#lc-army label{display:flex;gap:12px;align-items:center}
+#lc-selection,#lc-save-reason{padding:10px;border-left:3px solid #d5bc7d;background:#102029}
+#loftart-tools nav{max-width:300px}#lf-objective{top:310px}#lf-session{top:380px}
+@media(max-width:800px){#loftart-tools nav{max-width:190px}#lf-objective{top:380px}#lf-session{top:450px}.lc-list{grid-template-columns:1fr}}

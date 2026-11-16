@@ -1,0 +1,10 @@
+#campaign-progress{border-left:3px solid #e0c78d;padding:12px;background:#102029;font-weight:600}
+.campaign-card{padding:16px;margin:12px 0;border:1px solid #657b75;border-radius:10px;background:linear-gradient(120deg,#1b303b,#14232b)}
+.campaign-card h3{margin:0 0 8px;color:#edcf92;font-family:Georgia,serif}
+.campaign-card small{display:block;color:#b8d7c9;margin-bottom:10px}
+.campaign-card[data-state=locked]{opacity:.65;background:#142029}
+.campaign-card[data-state=completed]{border-color:#8ebc8b}
+#loftart-tools nav{max-width:310px}
+@media(max-width:800px){#loftart-tools nav{max-width:190px}#lf-objective{top:410px}#lf-session{top:480px}}
+
+#campaign-dungeon-status{top:auto!important;bottom:200px;max-width:min(620px,85vw);text-align:center;line-height:1.5;border:1px solid #7da59e;background:#102029ed!important}

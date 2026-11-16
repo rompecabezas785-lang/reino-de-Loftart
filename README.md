@@ -65,3 +65,23 @@ La coronación de cada torre ahora tiene un piso circular amplio, con un hueco p
 Cada entrada tiene una puerta de dos hojas. Pulsa **E** cerca de ella, desde fuera o desde dentro, para abrirla o cerrarla. Las hojas se animan, la puerta cerrada bloquea el paso y el cierre se rechaza si el personaje u otra unidad ocupa el umbral. Las puertas comienzan abiertas y su estado es local a la sesión; no se añade a las partidas guardadas.
 
 Se corrigió además la resolución de penetración de los obstáculos circulares del código original: desplazaba el personaje hacia el centro en vez de separarlo. Hay pruebas para penetración parcial y para coincidencia exacta con el centro. La validación de esta actualización ejecuta 23 comprobaciones generales y 71 de torres, circuitos, puertas y colisiones.
+
+## Experiencia ampliada: 50 mejoras
+
+**M** abre el mapa y permite marcar destinos. **J** abre el diario y la guía de preparación. **O** abre los ajustes de comodidad y accesibilidad. Estas ventanas pausan la partida; **Escape** las cierra. **F8** oculta o restaura la interfaz para capturas. La barra de herramientas también ofrece pantalla completa.
+
+La lista completa, los límites y el alcance de las comprobaciones están en [50 mejoras](docs/50-mejoras.md). El módulo `src/experience.js` y sus estilos se incorporan a la distribución autónoma mediante el compilador existente. `npm test` incluye las pruebas nuevas de experiencia además de las regresiones de jugabilidad y torres.
+
+## Centro de mando: otras 60 mejoras
+
+**K** abre **Reino**: resumen, edificios, habitantes, ejército, controles, guardado y objetivos. Selecciona tropas y confirma una orden para que actúen al reanudar. Desde el directorio puedes marcar entradas en el mapa. La sección Guardar muestra las ranuras y pide confirmación antes de escribir.
+
+El mapa incorpora zoom, capas y destinos persistentes. El diario permite buscar y exportar. En Controles puedes activar carrera sin mantener Shift, ajustar avisos y consultar atajos. Los objetivos registran exploración, visitas, vida y abastecimiento durante la sesión.
+
+Consulta [las 60 mejoras nuevas y sus límites](docs/60-mejoras-reino.md). `src/council.js` utiliza los sistemas originales del juego y el diálogo de experiencia compartido. `tests/council.cjs` se ejecuta con `npm test`.
+
+## Campaña: Los veinte sellos
+
+Añadidos diez campamentos de monstruos y diez mazmorras, cada uno con temática, historia y guardián propios. Empiezas con cinco encuentros y desbloqueas otros cinco al completar cada grupo. **B** abre las historias y permite marcar destinos; **E** entra o reclama una reliquia. La fauna y flora de cada hábitat se revelan con su capítulo.
+
+El progreso se guarda con la partida. El oro que no cabe en el almacén queda pendiente de reclamar en Aventuras. Consulta [la campaña, sus veinte lugares y las reglas de progreso](docs/campana-veinte-sellos.md). Los datos están en `src/campaign.json`, la integración en `src/campaign.js` y las pruebas en `tests/campaign.cjs`.

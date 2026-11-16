@@ -1,0 +1,25 @@
+#loftart-tools {--lf-scale:1;position:fixed;inset:0;pointer-events:none;z-index:40;font:calc(12px * var(--lf-scale))/1.5 system-ui;color:#ecf1ee}
+#loftart-tools nav {position:absolute;left:12px;top:158px;display:flex;flex-wrap:wrap;gap:5px;max-width:285px;pointer-events:auto}
+#loftart-tools button,#lf-dialog button,#lf-dialog select {min-height:36px;border:1px solid #839b97;border-radius:6px;background:#142831;color:#f3e7c6;padding:7px 10px;font:inherit;cursor:pointer}
+#lf-navigation {position:absolute;top:116px;left:50%;transform:translateX(-50%);display:grid;text-align:center;background:#102029db;border-radius:8px;padding:4px 12px}
+#lf-objective {position:absolute;left:12px;top:290px;max-width:245px;padding:8px;background:#102029db;border-left:2px solid #d5b97b}
+#lf-session {position:absolute;left:12px;top:354px;color:#c5d7d5}
+#lf-status {position:absolute;left:50%;top:155px;transform:translateX(-50%);color:#ffe0a1}
+#lf-toast {position:absolute;left:50%;bottom:235px;transform:translateX(-50%);max-width:80vw;text-align:center;background:#102029ed;border-radius:8px;padding:8px 14px}
+#lf-toast:empty {display:none}
+#lf-dialog {position:fixed;inset:0;z-index:1100;display:grid;place-items:center;background:#030b13c9;padding:16px;font:calc(14px * var(--lf-scale,1))/1.5 system-ui;color:#edf2eb}
+#lf-dialog[hidden] {display:none}
+.lf-box {box-sizing:border-box;width:min(640px,100%);max-height:90dvh;overflow:auto;background:#142831;border:1px solid #d5b97b;border-radius:14px;padding:20px;box-shadow:0 20px 80px #0008}
+.lf-box header {display:flex;align-items:center;justify-content:space-between;gap:12px}.lf-box h2{font-family:Georgia,serif;color:#f1d49a}
+.lf-settings {display:grid;gap:14px;margin-bottom:20px}.lf-settings label {display:flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:space-between}.lf-settings input{accent-color:#e2c987;max-width:100%}.lf-settings output{min-width:4em}
+#lf-dialog button:focus-visible,#lf-dialog input:focus-visible,#lf-dialog select:focus-visible,#loftart-tools button:focus-visible {outline:3px solid #9fe5dc;outline-offset:3px}
+#lf-map {display:block;width:min(400px,100%);height:auto;margin:auto;border:1px solid #5a7479;cursor:crosshair}
+#lf-events {padding-left:24px;max-height:240px;overflow:auto}#lf-events li{margin:8px 0}#lf-lessons{list-style:none;padding:0}
+#lf-damage {position:fixed;inset:0;z-index:30;pointer-events:none;box-shadow:inset 0 0 65px #d74c4c90;opacity:0}#lf-damage.visible{opacity:1}
+.lf-contrast #hud,.lf-contrast #loftart-tools {color:white}.lf-contrast #hud>div,.lf-contrast #hud>section,.lf-contrast .lf-box {background:#061017!important;border-color:white!important}.lf-contrast #estado-rey.peligro {outline:3px dashed #ffdc65}
+.lf-motion #hud *,.lf-motion #loftart-tools *,.lf-motion #lf-dialog *{transition:none!important;animation:none!important;scroll-behavior:auto!important}
+.lf-photo #hud,.lf-photo #loftart-tools,.lf-photo #lf-damage {visibility:hidden}
+.lf-photo #lf-dialog {visibility:visible}
+@media(max-width:800px){#loftart-tools nav{top:175px;max-width:190px}#lf-objective{top:350px;max-width:175px}#lf-session{top:425px}#lf-navigation{top:105px;left:auto;right:12px;transform:none;font-size:11px}#lf-status{top:145px}.lf-box{padding:14px}}
+@media(max-height:600px){#loftart-tools nav{top:112px;max-width:260px}#lf-objective{display:none}#lf-session{display:none}#lf-toast{bottom:180px}}
+@media(pointer:coarse){#loftart-tools button,#lf-dialog button,#lf-dialog select{min-height:44px}}

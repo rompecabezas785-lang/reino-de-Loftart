@@ -1,0 +1,1008 @@
+[
+  {
+    "id": "sello_01",
+    "index": 0,
+    "nombre": "Los Ladrones del Brezal",
+    "kind": "camp",
+    "theme": "brezal",
+    "flora": "flowers",
+    "fauna": "rabbit",
+    "intro": "Los trasgos robaron las semillas con las que la herbolaria Alba iba a sanar los campos. Entre sus tiendas se oyen cascabeles de conejos atrapados.",
+    "clue": "El saco de Alba conserva semillas que germinan incluso en ceniza.",
+    "ending": "Alba recupera su semillero. En el saco aparece el primer fragmento de un mapa con veinte sellos.",
+    "bossName": "Chispa, ladrón de semillas",
+    "x": -120,
+    "z": -80,
+    "ground": "#4c7142",
+    "accent": "#d6a4df",
+    "salas": [
+      {
+        "enemigos": [
+          [
+            "trasgo",
+            2
+          ],
+          [
+            "lobo_corrupto",
+            1
+          ]
+        ],
+        "cofre": false,
+        "story": "Los trasgos robaron las semillas con las que la herbolaria Alba iba a sanar los campos. Entre sus tiendas se oyen cascabeles de conejos atrapados.",
+        "jefe": "trasgo"
+      }
+    ],
+    "reward": 80,
+    "layout": 0,
+    "bossHealth": 100
+  },
+  {
+    "id": "sello_02",
+    "index": 1,
+    "nombre": "La Cripta de las Luciérnagas",
+    "kind": "dungeon",
+    "theme": "cripta luminosa",
+    "flora": "mushrooms",
+    "fauna": "firefly",
+    "intro": "La sepulturera Inés encendía lámparas para que los muertos encontraran el camino. Alguien apagó la última y las sombras aprendieron a caminar.",
+    "clue": "La lámpara de Inés guarda los nombres de quienes nunca fueron despedidos.",
+    "ending": "Al devolver los nombres a sus nichos, las luces vuelven a guiar a los viajeros. El mapa señala un pacto roto.",
+    "bossName": "El Guardián sin Nombre",
+    "x": -170,
+    "z": -60,
+    "ground": "#283b40",
+    "accent": "#9deedb",
+    "salas": [
+      {
+        "enemigos": [
+          [
+            "esqueleto_guerrero",
+            2
+          ],
+          [
+            "trasgo",
+            1
+          ]
+        ],
+        "cofre": true,
+        "story": "La lámpara de Inés guarda los nombres de quienes nunca fueron despedidos."
+      },
+      {
+        "enemigos": [
+          [
+            "trasgo",
+            2
+          ],
+          [
+            "esqueleto_guerrero",
+            1
+          ]
+        ],
+        "cofre": false,
+        "story": "La sepulturera Inés encendía lámparas para que los muertos encontraran el camino. Alguien apagó la última y las sombras aprendieron a caminar.",
+        "jefe": "esqueleto_guerrero"
+      }
+    ],
+    "reward": 85,
+    "layout": 1,
+    "bossHealth": 108
+  },
+  {
+    "id": "sello_03",
+    "index": 2,
+    "nombre": "El Vado de los Colmillos",
+    "kind": "camp",
+    "theme": "ribera",
+    "flora": "reeds",
+    "fauna": "heron",
+    "intro": "La caravana de sal no llegó al reino. Una manada corrompida ocupa el vado y los saqueadores cobran tributo con los carros abandonados.",
+    "clue": "El manifiesto del mercader revela quién compró la sal para un ritual.",
+    "ending": "El paso queda libre. Las garzas regresan y el manifiesto conduce a una vieja mina.",
+    "bossName": "Garra de Junco",
+    "x": -220,
+    "z": -40,
+    "ground": "#3c6571",
+    "accent": "#abd8af",
+    "salas": [
+      {
+        "enemigos": [
+          [
+            "lobo_corrupto",
+            2
+          ],
+          [
+            "trasgo",
+            1
+          ]
+        ],
+        "cofre": false,
+        "story": "La caravana de sal no llegó al reino. Una manada corrompida ocupa el vado y los saqueadores cobran tributo con los carros abandonados.",
+        "jefe": "lobo_corrupto"
+      }
+    ],
+    "reward": 90,
+    "layout": 2,
+    "bossHealth": 116
+  },
+  {
+    "id": "sello_04",
+    "index": 3,
+    "nombre": "La Mina del Eco Roto",
+    "kind": "dungeon",
+    "theme": "mina de cobre",
+    "flora": "crystals",
+    "fauna": "bat",
+    "intro": "Los mineros oían golpes desde un túnel sellado. El capataz abrió la roca buscando supervivientes y encontró un corazón de cobre que repetía sus miedos.",
+    "clue": "El diapasón del capataz permite distinguir un eco de una voz real.",
+    "ending": "El corazón se apaga al sonar el diapasón. Los ecos revelan que una campana despertó los veinte sellos.",
+    "bossName": "El Capataz Hueco",
+    "x": -140,
+    "z": -140,
+    "ground": "#50382b",
+    "accent": "#e5a05d",
+    "salas": [
+      {
+        "enemigos": [
+          [
+            "trasgo",
+            2
+          ],
+          [
+            "orco_saqueador",
+            1
+          ]
+        ],
+        "cofre": true,
+        "story": "Los mineros oían golpes desde un túnel sellado. El capataz abrió la roca buscando supervivientes y encontró un corazón de cobre que repetía sus miedos."
+      },
+      {
+        "enemigos": [
+          [
+            "orco_saqueador",
+            2
+          ],
+          [
+            "trasgo",
+            1
+          ]
+        ],
+        "cofre": true,
+        "story": "El diapasón del capataz permite distinguir un eco de una voz real."
+      },
+      {
+        "enemigos": [
+          [
+            "trasgo",
+            2
+          ],
+          [
+            "orco_saqueador",
+            1
+          ]
+        ],
+        "cofre": false,
+        "story": "Los mineros oían golpes desde un túnel sellado. El capataz abrió la roca buscando supervivientes y encontró un corazón de cobre que repetía sus miedos.",
+        "jefe": "trasgo"
+      }
+    ],
+    "reward": 95,
+    "layout": 3,
+    "bossHealth": 124
+  },
+  {
+    "id": "sello_05",
+    "index": 4,
+    "nombre": "La Vigilia del Roble Rojo",
+    "kind": "camp",
+    "theme": "bosque otoñal",
+    "flora": "oak",
+    "fauna": "deer",
+    "intro": "Un clan de orcos taló el roble donde las familias dejaban cintas por sus ausentes. Su jefe usa esas cintas para llamar a los lobos.",
+    "clue": "Las cintas bordadas aún conservan los nombres de las familias.",
+    "ending": "Las cintas vuelven a sus dueños. Bajo el tocón aparece la ruta hacia las tierras del invierno.",
+    "bossName": "Cortacintas",
+    "x": -220,
+    "z": -130,
+    "ground": "#614735",
+    "accent": "#d45f43",
+    "salas": [
+      {
+        "enemigos": [
+          [
+            "orco_saqueador",
+            2
+          ],
+          [
+            "lobo_corrupto",
+            1
+          ]
+        ],
+        "cofre": false,
+        "story": "Un clan de orcos taló el roble donde las familias dejaban cintas por sus ausentes. Su jefe usa esas cintas para llamar a los lobos.",
+        "jefe": "orco_saqueador"
+      }
+    ],
+    "reward": 100,
+    "layout": 4,
+    "bossHealth": 132
+  },
+  {
+    "id": "sello_06",
+    "index": 5,
+    "nombre": "El Archivo de Escarcha",
+    "kind": "dungeon",
+    "theme": "biblioteca helada",
+    "flora": "frost",
+    "fauna": "owl",
+    "intro": "La archivista Vera congeló la biblioteca para impedir que un invasor leyera el Nombre del Invierno. Ahora ni ella recuerda cómo descongelarla.",
+    "clue": "Una página tibia cuenta que el hielo protege, pero también encierra.",
+    "ending": "Las páginas se descongelan una a una. Vera identifica al responsable: el Cartógrafo del Vacío.",
+    "bossName": "El Bibliotecario Blanco",
+    "x": 0,
+    "z": -145,
+    "ground": "#526c82",
+    "accent": "#c8f0ff",
+    "salas": [
+      {
+        "enemigos": [
+          [
+            "esqueleto_guerrero",
+            3
+          ],
+          [
+            "brujo_oscuro",
+            1
+          ]
+        ],
+        "cofre": true,
+        "story": "La archivista Vera congeló la biblioteca para impedir que un invasor leyera el Nombre del Invierno. Ahora ni ella recuerda cómo descongelarla."
+      },
+      {
+        "enemigos": [
+          [
+            "brujo_oscuro",
+            3
+          ],
+          [
+            "esqueleto_guerrero",
+            1
+          ]
+        ],
+        "cofre": true,
+        "story": "La archivista Vera congeló la biblioteca para impedir que un invasor leyera el Nombre del Invierno. Ahora ni ella recuerda cómo descongelarla."
+      },
+      {
+        "enemigos": [
+          [
+            "esqueleto_guerrero",
+            3
+          ],
+          [
+            "brujo_oscuro",
+            1
+          ]
+        ],
+        "cofre": true,
+        "story": "Una página tibia cuenta que el hielo protege, pero también encierra."
+      },
+      {
+        "enemigos": [
+          [
+            "brujo_oscuro",
+            3
+          ],
+          [
+            "esqueleto_guerrero",
+            1
+          ]
+        ],
+        "cofre": false,
+        "story": "La archivista Vera congeló la biblioteca para impedir que un invasor leyera el Nombre del Invierno. Ahora ni ella recuerda cómo descongelarla.",
+        "jefe": "brujo_oscuro"
+      }
+    ],
+    "reward": 175,
+    "layout": 5,
+    "bossHealth": 250
+  },
+  {
+    "id": "sello_07",
+    "index": 6,
+    "nombre": "Las Tiendas del Vendaval",
+    "kind": "camp",
+    "theme": "estepa",
+    "flora": "grass",
+    "fauna": "fox",
+    "intro": "Los saqueadores del viento roban brújulas y giran los mojones de la frontera. Los exploradores vuelven siempre al mismo campamento.",
+    "clue": "La brújula de hueso apunta al lugar donde se pronunció una promesa.",
+    "ending": "Los mojones recuperan su orientación. La brújula revela una promesa enterrada en sal.",
+    "bossName": "Silbador de las Dunas",
+    "x": 55,
+    "z": -180,
+    "ground": "#77744a",
+    "accent": "#e6cf78",
+    "salas": [
+      {
+        "enemigos": [
+          [
+            "trasgo",
+            3
+          ],
+          [
+            "brujo_oscuro",
+            1
+          ]
+        ],
+        "cofre": false,
+        "story": "Los saqueadores del viento roban brújulas y giran los mojones de la frontera. Los exploradores vuelven siempre al mismo campamento.",
+        "jefe": "brujo_oscuro"
+      }
+    ],
+    "reward": 180,
+    "layout": 6,
+    "bossHealth": 258
+  },
+  {
+    "id": "sello_08",
+    "index": 7,
+    "nombre": "El Sepulcro de Sal",
+    "kind": "dungeon",
+    "theme": "desierto salino",
+    "flora": "cactus",
+    "fauna": "lizard",
+    "intro": "Una reina juró llevar agua al desierto. Sus guardianes convirtieron el juramento en una condena y vigilan cántaros llenos de sal.",
+    "clue": "El cántaro intacto contiene la última gota del antiguo oasis.",
+    "ending": "La gota rompe la condena. En la arena aparece el dibujo de un jardín bajo tierra.",
+    "bossName": "La Custodia de Sal",
+    "x": -65,
+    "z": -210,
+    "ground": "#a79f7e",
+    "accent": "#f8e4ac",
+    "salas": [
+      {
+        "enemigos": [
+          [
+            "esqueleto_guerrero",
+            3
+          ],
+          [
+            "orco_saqueador",
+            1
+          ]
+        ],
+        "cofre": true,
+        "story": "El cántaro intacto contiene la última gota del antiguo oasis."
+      },
+      {
+        "enemigos": [
+          [
+            "orco_saqueador",
+            3
+          ],
+          [
+            "esqueleto_guerrero",
+            1
+          ]
+        ],
+        "cofre": false,
+        "story": "Una reina juró llevar agua al desierto. Sus guardianes convirtieron el juramento en una condena y vigilan cántaros llenos de sal.",
+        "jefe": "orco_saqueador"
+      }
+    ],
+    "reward": 185,
+    "layout": 7,
+    "bossHealth": 266
+  },
+  {
+    "id": "sello_09",
+    "index": 8,
+    "nombre": "La Cosecha de los Hongos",
+    "kind": "camp",
+    "theme": "ciénaga fúngica",
+    "flora": "mushrooms",
+    "fauna": "boar",
+    "intro": "Los jabalíes dejaron de comer en el pantano cuando crecieron hongos violetas. Un aquelarre cosecha sus esporas para adormecer a los pueblos.",
+    "clue": "El mortero del aquelarre contiene el antídoto y la receta del veneno.",
+    "ending": "Los animales vuelven a hozar. El antídoto permite cruzar el jardín sin caer en su sueño.",
+    "bossName": "Madre Espora",
+    "x": 0,
+    "z": -250,
+    "ground": "#48394e",
+    "accent": "#d29cf2",
+    "salas": [
+      {
+        "enemigos": [
+          [
+            "brujo_oscuro",
+            3
+          ],
+          [
+            "lobo_corrupto",
+            1
+          ]
+        ],
+        "cofre": false,
+        "story": "Los jabalíes dejaron de comer en el pantano cuando crecieron hongos violetas. Un aquelarre cosecha sus esporas para adormecer a los pueblos.",
+        "jefe": "lobo_corrupto"
+      }
+    ],
+    "reward": 190,
+    "layout": 8,
+    "bossHealth": 274
+  },
+  {
+    "id": "sello_10",
+    "index": 9,
+    "nombre": "El Jardín de las Raíces Ciegas",
+    "kind": "dungeon",
+    "theme": "jardín subterráneo",
+    "flora": "roots",
+    "fauna": "firefly",
+    "intro": "Las raíces de un árbol milenario abrazan las ruinas de un hospital. Cada flor guarda un recuerdo que los demonios arrancan para alimentarse.",
+    "clue": "La semilla del recuerdo conserva la voz de la primera jardinera.",
+    "ending": "La jardinera recuerda dónde enterró la llave del alba. Cinco sellos más se iluminan en el mapa.",
+    "bossName": "La Raíz Devoradora",
+    "x": -150,
+    "z": -245,
+    "ground": "#243d32",
+    "accent": "#8de5a7",
+    "salas": [
+      {
+        "enemigos": [
+          [
+            "lobo_corrupto",
+            3
+          ],
+          [
+            "demonio_menor",
+            1
+          ]
+        ],
+        "cofre": true,
+        "story": "Las raíces de un árbol milenario abrazan las ruinas de un hospital. Cada flor guarda un recuerdo que los demonios arrancan para alimentarse."
+      },
+      {
+        "enemigos": [
+          [
+            "demonio_menor",
+            3
+          ],
+          [
+            "lobo_corrupto",
+            1
+          ]
+        ],
+        "cofre": true,
+        "story": "La semilla del recuerdo conserva la voz de la primera jardinera."
+      },
+      {
+        "enemigos": [
+          [
+            "lobo_corrupto",
+            3
+          ],
+          [
+            "demonio_menor",
+            1
+          ]
+        ],
+        "cofre": false,
+        "story": "Las raíces de un árbol milenario abrazan las ruinas de un hospital. Cada flor guarda un recuerdo que los demonios arrancan para alimentarse.",
+        "jefe": "demonio_menor"
+      }
+    ],
+    "reward": 195,
+    "layout": 9,
+    "bossHealth": 282
+  },
+  {
+    "id": "sello_11",
+    "index": 10,
+    "nombre": "Las Fraguas de Ceniza",
+    "kind": "camp",
+    "theme": "páramo volcánico",
+    "flora": "ash",
+    "fauna": "lizard",
+    "intro": "Un herrero renegado arma a los monstruos con metal extraído de una estrella caída. Sus fogatas ennegrecen los pastos de la frontera.",
+    "clue": "El martillo estelar puede romper las cerraduras del Cartógrafo.",
+    "ending": "Las fraguas se enfrían. En el metal queda grabada una ruta por el observatorio.",
+    "bossName": "Brasa, el Herrero Roto",
+    "x": 135,
+    "z": 20,
+    "ground": "#3f2b2b",
+    "accent": "#ff884f",
+    "salas": [
+      {
+        "enemigos": [
+          [
+            "orco_saqueador",
+            4
+          ],
+          [
+            "demonio_menor",
+            1
+          ]
+        ],
+        "cofre": false,
+        "story": "Un herrero renegado arma a los monstruos con metal extraído de una estrella caída. Sus fogatas ennegrecen los pastos de la frontera.",
+        "jefe": "demonio_menor"
+      }
+    ],
+    "reward": 270,
+    "layout": 10,
+    "bossHealth": 400
+  },
+  {
+    "id": "sello_12",
+    "index": 11,
+    "nombre": "El Observatorio Invertido",
+    "kind": "dungeon",
+    "theme": "astronomía arcana",
+    "flora": "crystals",
+    "fauna": "owl",
+    "intro": "La astrónoma Celia giró sus lentes hacia el suelo y descubrió un cielo enterrado. Desde entonces, sus ayudantes obedecen a constelaciones falsas.",
+    "clue": "La lente verdadera muestra una estrella que no aparece en ningún cielo.",
+    "ending": "Celia alinea la lente. La estrella señala un puerto que desapareció de todos los mapas.",
+    "bossName": "El Astrónomo Ciego",
+    "x": 190,
+    "z": 65,
+    "ground": "#2e3150",
+    "accent": "#aaa8ff",
+    "salas": [
+      {
+        "enemigos": [
+          [
+            "brujo_oscuro",
+            4
+          ],
+          [
+            "esqueleto_guerrero",
+            1
+          ]
+        ],
+        "cofre": true,
+        "story": "La astrónoma Celia giró sus lentes hacia el suelo y descubrió un cielo enterrado. Desde entonces, sus ayudantes obedecen a constelaciones falsas."
+      },
+      {
+        "enemigos": [
+          [
+            "esqueleto_guerrero",
+            4
+          ],
+          [
+            "brujo_oscuro",
+            1
+          ]
+        ],
+        "cofre": true,
+        "story": "La astrónoma Celia giró sus lentes hacia el suelo y descubrió un cielo enterrado. Desde entonces, sus ayudantes obedecen a constelaciones falsas."
+      },
+      {
+        "enemigos": [
+          [
+            "brujo_oscuro",
+            4
+          ],
+          [
+            "esqueleto_guerrero",
+            1
+          ]
+        ],
+        "cofre": true,
+        "story": "La lente verdadera muestra una estrella que no aparece en ningún cielo."
+      },
+      {
+        "enemigos": [
+          [
+            "esqueleto_guerrero",
+            4
+          ],
+          [
+            "brujo_oscuro",
+            1
+          ]
+        ],
+        "cofre": false,
+        "story": "La astrónoma Celia giró sus lentes hacia el suelo y descubrió un cielo enterrado. Desde entonces, sus ayudantes obedecen a constelaciones falsas.",
+        "jefe": "esqueleto_guerrero"
+      }
+    ],
+    "reward": 275,
+    "layout": 11,
+    "bossHealth": 408
+  },
+  {
+    "id": "sello_13",
+    "index": 12,
+    "nombre": "El Puerto de los Náufragos",
+    "kind": "camp",
+    "theme": "costa de coral",
+    "flora": "coral",
+    "fauna": "heron",
+    "intro": "Una banda de monstruos atrae barcos con una falsa luz. Los supervivientes dejaron mensajes dentro de caracolas antes de huir al bosque.",
+    "clue": "La caracola del vigía reproduce la señal del faro auténtico.",
+    "ending": "La luz falsa se apaga. La caracola habla de un reloj que detiene las mareas.",
+    "bossName": "Marea Negra",
+    "x": 235,
+    "z": 115,
+    "ground": "#365c66",
+    "accent": "#eaad81",
+    "salas": [
+      {
+        "enemigos": [
+          [
+            "orco_saqueador",
+            4
+          ],
+          [
+            "trasgo",
+            1
+          ]
+        ],
+        "cofre": false,
+        "story": "Una banda de monstruos atrae barcos con una falsa luz. Los supervivientes dejaron mensajes dentro de caracolas antes de huir al bosque.",
+        "jefe": "trasgo"
+      }
+    ],
+    "reward": 280,
+    "layout": 12,
+    "bossHealth": 416
+  },
+  {
+    "id": "sello_14",
+    "index": 13,
+    "nombre": "La Cámara de las Horas Perdidas",
+    "kind": "dungeon",
+    "theme": "relojería",
+    "flora": "clockwork",
+    "fauna": "bat",
+    "intro": "El relojero Elías quiso regalar un día más a su hija enferma. El Cartógrafo le vendió un mecanismo que roba minutos a toda la comarca.",
+    "clue": "El péndulo original conserva el ritmo de una vida, no el de una máquina.",
+    "ending": "Elías detiene el mecanismo. Los minutos vuelven y el mapa descubre los hornos de cristal.",
+    "bossName": "El Custodio del Minuto",
+    "x": 155,
+    "z": 150,
+    "ground": "#5b4934",
+    "accent": "#ebcb7b",
+    "salas": [
+      {
+        "enemigos": [
+          [
+            "esqueleto_guerrero",
+            4
+          ],
+          [
+            "brujo_oscuro",
+            1
+          ]
+        ],
+        "cofre": true,
+        "story": "El péndulo original conserva el ritmo de una vida, no el de una máquina."
+      },
+      {
+        "enemigos": [
+          [
+            "brujo_oscuro",
+            4
+          ],
+          [
+            "esqueleto_guerrero",
+            1
+          ]
+        ],
+        "cofre": false,
+        "story": "El relojero Elías quiso regalar un día más a su hija enferma. El Cartógrafo le vendió un mecanismo que roba minutos a toda la comarca.",
+        "jefe": "brujo_oscuro"
+      }
+    ],
+    "reward": 285,
+    "layout": 13,
+    "bossHealth": 424
+  },
+  {
+    "id": "sello_15",
+    "index": 14,
+    "nombre": "Los Hornos de Vidrio Verde",
+    "kind": "camp",
+    "theme": "erial de cristal",
+    "flora": "crystals",
+    "fauna": "fox",
+    "intro": "Los artesanos de vidrio fueron expulsados por demonios que funden sus ventanas para fabricar espejos de vigilancia.",
+    "clue": "El molde de la maestra vidriera crea superficies que el Vacío no puede mirar.",
+    "ending": "Los espejos se vuelven opacos. La última vigilancia revela una puerta escondida en el coral.",
+    "bossName": "El Fundidor Verde",
+    "x": 80,
+    "z": 220,
+    "ground": "#235249",
+    "accent": "#6febc0",
+    "salas": [
+      {
+        "enemigos": [
+          [
+            "demonio_menor",
+            4
+          ],
+          [
+            "orco_saqueador",
+            1
+          ]
+        ],
+        "cofre": false,
+        "story": "Los artesanos de vidrio fueron expulsados por demonios que funden sus ventanas para fabricar espejos de vigilancia.",
+        "jefe": "orco_saqueador"
+      }
+    ],
+    "reward": 290,
+    "layout": 14,
+    "bossHealth": 432
+  },
+  {
+    "id": "sello_16",
+    "index": 15,
+    "nombre": "La Catedral del Coral Seco",
+    "kind": "dungeon",
+    "theme": "santuario marino",
+    "flora": "coral",
+    "fauna": "firefly",
+    "intro": "Antes del retroceso del mar, aquí se cantaba para guiar a las ballenas. Los sacerdotes vacíos han convertido el canto en una orden de guerra.",
+    "clue": "La partitura incompleta guarda un silencio capaz de deshacer el hechizo.",
+    "ending": "El silencio libera al coro. Sus voces señalan dónde están presos los últimos mensajeros.",
+    "bossName": "El Corista Abisal",
+    "x": 0,
+    "z": 150,
+    "ground": "#574b62",
+    "accent": "#f0b7d4",
+    "salas": [
+      {
+        "enemigos": [
+          [
+            "brujo_oscuro",
+            5
+          ],
+          [
+            "demonio_menor",
+            1
+          ]
+        ],
+        "cofre": true,
+        "story": "Antes del retroceso del mar, aquí se cantaba para guiar a las ballenas. Los sacerdotes vacíos han convertido el canto en una orden de guerra."
+      },
+      {
+        "enemigos": [
+          [
+            "demonio_menor",
+            5
+          ],
+          [
+            "brujo_oscuro",
+            1
+          ]
+        ],
+        "cofre": true,
+        "story": "La partitura incompleta guarda un silencio capaz de deshacer el hechizo."
+      },
+      {
+        "enemigos": [
+          [
+            "brujo_oscuro",
+            5
+          ],
+          [
+            "demonio_menor",
+            1
+          ]
+        ],
+        "cofre": false,
+        "story": "Antes del retroceso del mar, aquí se cantaba para guiar a las ballenas. Los sacerdotes vacíos han convertido el canto en una orden de guerra.",
+        "jefe": "demonio_menor"
+      }
+    ],
+    "reward": 365,
+    "layout": 15,
+    "bossHealth": 550
+  },
+  {
+    "id": "sello_17",
+    "index": 16,
+    "nombre": "Las Jaulas del Crepúsculo",
+    "kind": "camp",
+    "theme": "bosque de espinos",
+    "flora": "thorns",
+    "fauna": "deer",
+    "intro": "Los mensajeros del reino desaparecen en un bosque donde las sombras parecen barrotes. Los carceleros guardan sus cartas en una jaula de espinos.",
+    "clue": "El manojo de cartas reúne los testimonios de las dieciséis rutas anteriores.",
+    "ending": "Las cartas llegan por fin al castillo. Juntas describen una puerta que solo existe en los espejos.",
+    "bossName": "El Carcelero de Sombras",
+    "x": -65,
+    "z": 180,
+    "ground": "#3c3049",
+    "accent": "#c294d2",
+    "salas": [
+      {
+        "enemigos": [
+          [
+            "orco_saqueador",
+            5
+          ],
+          [
+            "lobo_corrupto",
+            1
+          ]
+        ],
+        "cofre": false,
+        "story": "Los mensajeros del reino desaparecen en un bosque donde las sombras parecen barrotes. Los carceleros guardan sus cartas en una jaula de espinos.",
+        "jefe": "lobo_corrupto"
+      }
+    ],
+    "reward": 370,
+    "layout": 16,
+    "bossHealth": 558
+  },
+  {
+    "id": "sello_18",
+    "index": 17,
+    "nombre": "El Laberinto de los Espejos Negros",
+    "kind": "dungeon",
+    "theme": "ruinas de obsidiana",
+    "flora": "obsidian",
+    "fauna": "bat",
+    "intro": "Cada espejo muestra al rey tomando una decisión distinta. El Cartógrafo pretende que ninguna versión se atreva a llegar hasta él.",
+    "clue": "El espejo sin reflejo demuestra que el futuro todavía puede cambiarse.",
+    "ending": "Los reflejos se quiebran. Solo queda un sendero: el campamento de los estandartes robados.",
+    "bossName": "El Reflejo del Tirano",
+    "x": -130,
+    "z": 200,
+    "ground": "#252333",
+    "accent": "#a7a7d7",
+    "salas": [
+      {
+        "enemigos": [
+          [
+            "esqueleto_guerrero",
+            5
+          ],
+          [
+            "demonio_menor",
+            1
+          ]
+        ],
+        "cofre": true,
+        "story": "Cada espejo muestra al rey tomando una decisión distinta. El Cartógrafo pretende que ninguna versión se atreva a llegar hasta él."
+      },
+      {
+        "enemigos": [
+          [
+            "demonio_menor",
+            5
+          ],
+          [
+            "esqueleto_guerrero",
+            1
+          ]
+        ],
+        "cofre": true,
+        "story": "Cada espejo muestra al rey tomando una decisión distinta. El Cartógrafo pretende que ninguna versión se atreva a llegar hasta él."
+      },
+      {
+        "enemigos": [
+          [
+            "esqueleto_guerrero",
+            5
+          ],
+          [
+            "demonio_menor",
+            1
+          ]
+        ],
+        "cofre": true,
+        "story": "El espejo sin reflejo demuestra que el futuro todavía puede cambiarse."
+      },
+      {
+        "enemigos": [
+          [
+            "demonio_menor",
+            5
+          ],
+          [
+            "esqueleto_guerrero",
+            1
+          ]
+        ],
+        "cofre": false,
+        "story": "Cada espejo muestra al rey tomando una decisión distinta. El Cartógrafo pretende que ninguna versión se atreva a llegar hasta él.",
+        "jefe": "demonio_menor"
+      }
+    ],
+    "reward": 375,
+    "layout": 17,
+    "bossHealth": 566
+  },
+  {
+    "id": "sello_19",
+    "index": 18,
+    "nombre": "El Último Estandarte",
+    "kind": "camp",
+    "theme": "campo de batalla",
+    "flora": "flowers",
+    "fauna": "owl",
+    "intro": "Los restos de todos los clanes se reúnen bajo banderas tomadas al reino. Una capitana monstruosa promete borrar Loftart del mapa antes del alba.",
+    "clue": "El estandarte de la primera guardia aún puede convocar a quienes resistieron.",
+    "ending": "Las banderas vuelven al reino. Su luz revela la entrada al lugar donde se dibujó la invasión.",
+    "bossName": "La Capitana del Ocaso",
+    "x": -215,
+    "z": 180,
+    "ground": "#483c38",
+    "accent": "#e7ad70",
+    "salas": [
+      {
+        "enemigos": [
+          [
+            "orco_saqueador",
+            5
+          ],
+          [
+            "brujo_oscuro",
+            1
+          ]
+        ],
+        "cofre": false,
+        "story": "Los restos de todos los clanes se reúnen bajo banderas tomadas al reino. Una capitana monstruosa promete borrar Loftart del mapa antes del alba.",
+        "jefe": "brujo_oscuro"
+      }
+    ],
+    "reward": 380,
+    "layout": 18,
+    "bossHealth": 574
+  },
+  {
+    "id": "sello_20",
+    "index": 19,
+    "nombre": "El Atlas del Vacío",
+    "kind": "dungeon",
+    "theme": "nexo estelar",
+    "flora": "astral",
+    "fauna": "firefly",
+    "intro": "El Cartógrafo dibujó veinte heridas sobre la tierra para entrar en ella. Con cada sello recuperado has convertido sus rutas de invasión en caminos de regreso.",
+    "clue": "La pluma del Cartógrafo permite escribir una última línea en el atlas.",
+    "ending": "El rey traza una frontera alrededor del Vacío. Las veinte heridas se cierran; fauna y flora reclaman los caminos y comienza una nueva historia para Loftart.",
+    "bossName": "El Cartógrafo del Vacío",
+    "x": -230,
+    "z": 80,
+    "ground": "#252545",
+    "accent": "#b6d5ff",
+    "salas": [
+      {
+        "enemigos": [
+          [
+            "demonio_menor",
+            5
+          ],
+          [
+            "brujo_oscuro",
+            1
+          ]
+        ],
+        "cofre": true,
+        "story": "La pluma del Cartógrafo permite escribir una última línea en el atlas."
+      },
+      {
+        "enemigos": [
+          [
+            "brujo_oscuro",
+            5
+          ],
+          [
+            "demonio_menor",
+            1
+          ]
+        ],
+        "cofre": false,
+        "story": "El Cartógrafo dibujó veinte heridas sobre la tierra para entrar en ella. Con cada sello recuperado has convertido sus rutas de invasión en caminos de regreso.",
+        "jefe": "brujo_oscuro"
+      }
+    ],
+    "reward": 385,
+    "layout": 19,
+    "bossHealth": 582
+  }
+]

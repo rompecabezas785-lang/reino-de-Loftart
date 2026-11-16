@@ -1,0 +1,77 @@
+const { chromium } = require('playwright');
+const assert = require('node:assert/strict');
+const { spawn } = require('node:child_process');
+(async () => {
+  const server=spawn('python3',['-m','http.server','8128','--bind','127.0.0.1'],{cwd:require('node:path').resolve(__dirname,'..'),stdio:'ignore'});
+  let browser,count=0;const check=(name,value)=>{assert.ok(value,name);console.log(`PASS ${++count} ${name}`);};
+  try {
+    for(let i=0;i<50;i++){try{if((await fetch('http://127.0.0.1:8128/')).ok)break;}catch{}await new Promise(r=>setTimeout(r,100));}
+    browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH||'/usr/bin/chromium',args:['--no-sandbox','--use-angle=swiftshader','--enable-unsafe-swiftshader']});
+    const page=await browser.newPage({viewport:{width:1280,height:800}}),errors=[];
+    page.on('pageerror',e=>errors.push(e.message));
+    await page.goto('http://127.0.0.1:8128/Reino-de-Hierro.html');await page.waitForFunction(()=>window.__juego?._ultimoAhora>0,{}, {timeout:90000});
+    const open=async key=>page.keyboard.press(key);
+    const set=async(key,value)=>page.locator(`[data-setting="${key}"]`).evaluate((el,v)=>{if(el.type==='checkbox')el.checked=v;else el.value=v;el.dispatchEvent(new Event('input',{bubbles:true}));},value);
+    await open('o');check('01 Ajustes accesibles por O',await page.locator('#lf-dialog').isVisible());
+    await set('scale',1.2);check('02 Preferencias persistentes',await page.evaluate(()=>JSON.parse(localStorage.getItem('loftart.preferences')).scale===1.2));
+    check('03 Escala aplicada',await page.locator('#lf-dialog').evaluate(el=>getComputedStyle(el).fontSize==='16.8px'));
+    await set('contrast',true);check('04 Alto contraste',await page.locator('body').evaluate(el=>el.classList.contains('lf-contrast')));
+    await set('motion',true);check('05 Movimiento reducido',await page.locator('body').evaluate(el=>el.classList.contains('lf-motion')));
+    await set('hints',false);check('06 Guía de controles ocultable',await page.locator('#hint').isHidden());
+    await set('sensitivity',1.5);await set('invert',true);
+    const camera=await page.evaluate(()=>{const g=window.__juego,c=g.camRig,old={yaw:c.yaw,pitch:c.pitch};c.pitch=0;c.update(.01,g.rey.pos,{dx:2,dy:2,rueda:0},g.terreno.colliders);const result={yaw:c.yaw-old.yaw,pitch:c.pitch,s:c.cfg.sensibilidad};c.yaw=old.yaw;c.pitch=old.pitch;return result;});
+    check('07 Sensibilidad modifica la cámara',Math.abs(camera.yaw+3*camera.s)<1e-6);check('08 Inversión vertical real',Math.abs(camera.pitch+3*camera.s)<1e-6);
+    await page.evaluate(()=>window.__juego.camRig.distDeseada=999);await page.locator('#lf-camera').click();check('09 Restablecer zoom',await page.evaluate(()=>window.__juego.camRig.distDeseada<999));
+    await page.locator('#lf-reset').click();check('10 Restablecer preferencias',await page.locator('[data-setting="scale"]').inputValue()==='1');
+    const paused=await page.evaluate(()=>{const g=window.__juego,before=g.rey.pos.clone(),time=g.oleadas.tiempoDia;g.input.teclas.add('KeyW');g.input.presionadasEsteFrame.add('Digit3');const mana=g.lanzador.mana;g._frame(performance.now()+20);return g.rey.pos.equals(before)&&time===g.oleadas.tiempoDia&&mana===g.lanzador.mana;});
+    check('11 Ventanas pausan movimiento, tiempo y hechizos',paused);
+    await page.locator('#lf-close').focus();await page.keyboard.press('Shift+Tab');check('12 Foco atrapado dentro del diálogo',await page.evaluate(()=>!!document.activeElement.closest('#lf-dialog')&&document.activeElement.id!=='lf-close'));
+    await open('Escape');check('13 Escape cierra',await page.locator('#lf-dialog').isHidden());
+    check('14 Cierre limpia entradas retenidas',await page.evaluate(()=>!window.__juego.input.teclas.size));
+    await page.locator('[data-open="settings"]').click();await open('Escape');check('15 Foco devuelto al botón',await page.locator('[data-open="settings"]').evaluate(el=>document.activeElement===el));
+    await page.keyboard.down('o');await page.keyboard.down('o');check('16 Repetición de tecla no cierra diálogo',await page.locator('#lf-dialog').isVisible());await page.keyboard.up('o');await open('Escape');
+    await open('o');await page.locator('#lf-close').focus();await page.keyboard.press('Tab');check('17 Tab alcanza controles',await page.locator('[data-setting="scale"]').evaluate(el=>document.activeElement===el));
+    check('18 Etiquetas de accesibilidad',await page.locator('#lf-dialog').getAttribute('aria-modal')==='true'&&await page.locator('[data-setting="scale"]').evaluate(el=>!!el.closest('label')));
+    await page.setViewportSize({width:390,height:700});check('19 Diálogo cabe en pantalla estrecha',await page.locator('.lf-box').evaluate(el=>el.getBoundingClientRect().right<=innerWidth));await page.setViewportSize({width:1280,height:800});
+    await open('Escape');await page.locator('#lf-fullscreen').click();await page.waitForFunction(()=>!!document.fullscreenElement||document.getElementById('lf-toast').textContent.includes('no disponible'));check('20 Pantalla completa o aviso explícito',await page.evaluate(()=>!!document.fullscreenElement||document.getElementById('lf-toast').textContent.includes('no disponible')));await page.evaluate(()=>document.fullscreenElement&&document.exitFullscreen());
+    await page.waitForTimeout(200);check('21 Brújula con orientación',/°/.test(await page.locator('#lf-compass').textContent()));
+    await open('o');await set('coordinates',true);await open('Escape');check('22 Coordenadas configurables',await page.locator('#lf-coordinates').isVisible());
+    await open('m');check('23 Mapa abierto con M',await page.locator('#lf-map').isVisible());
+    check('24 Posición del rey en alternativa textual',/Rey:/.test(await page.locator('#lf-map-description').textContent()));
+    check('25 Ocho destinos de torres',await page.locator('#lf-map-target option').count()===9);
+    const mapDraw=await page.evaluate(()=>{
+      const ctx=document.getElementById('lf-map').getContext('2d'),arc=ctx.arc,rect=ctx.fillRect,drawn={enemies:0,castle:false};
+      ctx.arc=function(...args){if(args[2]===3)drawn.enemies++;return arc.apply(this,args);};
+      ctx.fillRect=function(...args){if(args[2]===12&&args[3]===12)drawn.castle=true;return rect.apply(this,args);};
+      const g=window.__juego,expected=g.enemigos.filter(e=>e.vivo&&e.pos&&Math.abs(e.pos.x)<=120&&Math.abs(e.pos.z)<=120).length;
+      document.getElementById('lf-clear-target').click();ctx.arc=arc;ctx.fillRect=rect;return {...drawn,expected};
+    });
+    check('26 Mapa dibuja los enemigos próximos vivos',mapDraw.expected>0&&mapDraw.enemies===mapDraw.expected);
+    check('27 Mapa dibuja el castillo',mapDraw.castle);
+    await page.locator('#lf-map-target').selectOption('0');check('28 Destino seleccionable con teclado',/Destino a/.test(await page.locator('#lf-map-description').textContent()));
+    await open('Escape');await page.waitForFunction(()=>/Destino · \d+ m/.test(document.getElementById('lf-destination').textContent));check('29 Distancia al destino en HUD',/Destino · \d+ m/.test(await page.locator('#lf-destination').textContent()));
+    await page.evaluate(()=>{const g=window.__juego,t=g.experience.waypoint;g.rey.pos.set(t.x,0,t.z);g._frame(performance.now()+200);});await open('j');check('30 Llegada registrada',/Has llegado/.test(await page.locator('#lf-events').textContent()));await open('Escape');
+    await page.evaluate(()=>{const g=window.__juego;g._abrirMenu();g.rey.vida=g.rey.vidaMax*.2;g._frame(performance.now()+1000);});
+    check('31 Porcentaje de salud',/20%/.test(await page.locator('#lf-health-detail').textContent()));
+    check('32 Indicador visual de daño',await page.locator('#lf-damage').evaluate(el=>el.classList.contains('visible')));
+    await page.evaluate(()=>{const g=window.__juego;g.rey.vida+=2;g._frame(performance.now()+1200);});await open('j');check('33 Curación registrada',/\+2 de vida/.test(await page.locator('#lf-events').textContent()));
+    check('34 Aviso de salud crítica sin repetición',await page.locator('#lf-events li').filter({hasText:'Salud crítica:'}).count()===1);await open('Escape');
+    await page.evaluate(()=>{const g=window.__juego;g.lanzador.mana=0;g.rey.esquivaCD=1;g._frame(performance.now()+1400);g.rey.esquivaCD=0;g._frame(performance.now()+1600);});await open('j');
+    check('35 Aviso de maná bajo',/Maná bajo/.test(await page.locator('#lf-events').textContent()));check('36 Aviso de esquiva lista',/Esquiva lista/.test(await page.locator('#lf-events').textContent()));await open('Escape');
+    await page.evaluate(()=>{const g=window.__juego;g.oleadas.activa={};g._frame(performance.now()+1800);g.oleadas.activa=null;g._frame(performance.now()+2000);g.oleadas.dia++;g._frame(performance.now()+2200);});await open('j');
+    check('37 Inicio de oleada registrado',/Oleada en marcha/.test(await page.locator('#lf-events').textContent()));check('38 Fin de oleada registrado',/oleada ha terminado/.test(await page.locator('#lf-events').textContent()));check('39 Nuevo día registrado',/Comienza el día/.test(await page.locator('#lf-events').textContent()));check('40 Diario cronológico',/\d+:\d\d ·/.test(await page.locator('#lf-events').textContent()));
+    await page.locator('#lf-filter').selectOption('combat');check('41 Diario filtrable',!(/Comienza el día/.test(await page.locator('#lf-events').textContent())));
+    await page.locator('#lf-clear-journal').click();check('42 Limpieza del diario',/Todavía no hay/.test(await page.locator('#lf-events').textContent()));await open('Escape');
+    await page.evaluate(()=>{const g=window.__juego,render=g.renderer.render;g.renderer.render=()=>{};try{for(let i=0;i<90;i++){g.oleadas.dia++;g._frame(performance.now()+2500+i*200);}}finally{g.renderer.render=render;}});await open('j');await page.locator('#lf-filter').selectOption('all');check('43 Diario limitado a 80 entradas',await page.locator('#lf-events li').count()===80);
+    check('44 Guía de cinco objetivos',await page.locator('#lf-lessons li').count()===5);check('45 Progreso guardado',await page.evaluate(()=>JSON.parse(localStorage.getItem('loftart.training')).includes('map')));
+    await page.locator('#lf-reset-training').click();check('46 Reinicio del tutorial',await page.evaluate(()=>JSON.parse(localStorage.getItem('loftart.training')).length===0));
+    check('47 Objetivo visible en HUD',!!await page.locator('#lf-objective').textContent());
+    const before=await page.locator('#lf-session').textContent();await page.waitForTimeout(1100);check('48 Tiempo activo detenido durante pausa',before===await page.locator('#lf-session').textContent());
+    check('49 Estado de pausa visible',await page.locator('#lf-status').textContent()==='Partida pausada');await open('Escape');await open('F8');check('50 Modo de captura y retorno',await page.locator('#loftart-tools').isHidden());await open('F8');assert.ok(await page.locator('#loftart-tools').isVisible());
+    // Persistence, hostile storage and actual map interaction beyond the checklist.
+    await page.evaluate(()=>localStorage.setItem('loftart.preferences','{"scale":999,"sensitivity":-10,"contrast":"false"}'));
+    await page.reload();await page.waitForFunction(()=>window.__juego?._ultimoAhora>0,{}, {timeout:90000});await open('o');assert.equal(await page.locator('[data-setting="scale"]').inputValue(),'1.4');assert.equal(await page.locator('[data-setting="sensitivity"]').inputValue(),'0.25');assert.equal(await page.locator('[data-setting="contrast"]').isChecked(),false);await page.locator('#lf-reset').click();await open('Escape');await open('m');await page.locator('#lf-map').click({position:{x:120,y:120}});assert.match(await page.locator('#lf-map-description').textContent(),/Destino a/);await page.locator('#lf-clear-target').click();assert.match(await page.locator('#lf-map-description').textContent(),/Sin destino/);
+    await page.screenshot({path:'/tmp/loftart-map.png'});await open('Escape');await page.screenshot({path:'/tmp/loftart-experience.png'});
+    assert.deepEqual(errors,[]);console.log(`${count} checks passed; no browser runtime errors.`);
+  } finally {await browser?.close();server.kill();}
+})().catch(e=>{console.error(e);process.exitCode=1;});
