@@ -1,0 +1,14 @@
+{
+  "asset": "castillo-atlas.png",
+  "generator": "OpenAI ImageGen",
+  "prompt": "Create one premium square 2048x2048 game texture atlas, precisely 2 by 2 equal quadrants without gaps. Top left: exquisite medieval oil painting of a silver crowned queen in burgundy velvet holding white flowers, dark teal background, no frame. Top right: exquisite romantic oil painting of a mountain castle and waterfalls at golden sunset, no frame. Bottom left: flat front-on ornamental embroidered tapestry, deep indigo and antique gold, heraldic white stag, symmetric vines, highly detailed textile weave. Bottom right: flat front-on ivory marble panel with elaborate antique gold acanthus floral inlay and lapis accents. All fill quadrant edge to edge. Sophisticated museum quality fantasy palace art, sharp readable detail, no text, no watermark. Texture source for castle paintings, rugs and ornament, no perspective mockup.",
+  "layout": [
+    "retrato de la reina",
+    "paisaje del castillo",
+    "tapiz heráldico",
+    "mármol ornamental"
+  ],
+  "usage": "UV quadrants sampled directly; source image unchanged",
+  "rights": "Generated for this project at the user's request; no third-party source image supplied.",
+  "sha256": "07892db20ed057de8a4a09174e8ab276121a6912a43f2debdccda1c470186681"
+}
